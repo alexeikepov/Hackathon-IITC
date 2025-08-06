@@ -1,5 +1,3 @@
-// src/components/register-form.tsx
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name is too short"),
@@ -30,12 +30,16 @@ export function RegisterForm({
     resolver: zodResolver(registerSchema),
   });
 
+  const navigate = useNavigate();
+  const { login: setAuth } = useAuth();
+
   const mutation = useMutation({
     mutationFn: async (data: RegisterFormData) => {
       const res = await fetch("http://localhost:3001/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -45,12 +49,11 @@ export function RegisterForm({
 
       return res.json();
     },
-    onSuccess: () => {
-      alert("Registration successful!");
+    onSuccess: (data) => {
+      setAuth(data.user);
+      navigate("/dashboard");
     },
-    onError: (error: Error) => {
-      alert(error.message);
-    },
+    onError: () => {},
   });
 
   const onSubmit = (data: RegisterFormData) => {
@@ -76,7 +79,12 @@ export function RegisterForm({
       <div className="grid gap-5">
         <div className="grid gap-2">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" type="text" {...register("name")} />
+          <Input
+            id="name"
+            type="text"
+            {...register("name")}
+            disabled={mutation.isPending}
+          />
           {errors.name && (
             <p className="text-sm text-red-500">{errors.name.message}</p>
           )}
@@ -84,7 +92,12 @@ export function RegisterForm({
 
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" {...register("email")} />
+          <Input
+            id="email"
+            type="email"
+            {...register("email")}
+            disabled={mutation.isPending}
+          />
           {errors.email && (
             <p className="text-sm text-red-500">{errors.email.message}</p>
           )}
@@ -92,14 +105,29 @@ export function RegisterForm({
 
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" {...register("password")} />
+          <Input
+            id="password"
+            type="password"
+            {...register("password")}
+            disabled={mutation.isPending}
+          />
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password.message}</p>
           )}
         </div>
 
+        {mutation.error && (
+          <p className="text-sm text-red-500 text-center">
+            {mutation.error.message}
+          </p>
+        )}
+
         <Button type="submit" className="w-full" disabled={mutation.isPending}>
-          {mutation.isPending ? "Creating..." : "Sign Up"}
+          {mutation.isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            "Sign Up"
+          )}
         </Button>
       </div>
 
