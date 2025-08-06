@@ -13,9 +13,8 @@ export function Sidebar() {
     { label: "Dashboard", path: "/" },
     { label: "Courses", path: "/courses" },
     { label: "Create Course", path: "/create-course" },
-    // { label: "Messages", path: "/messages" },
     { label: "Syllabus", path: "/syllabus" },
-    { label: "Schedule", path: "/schedule-page" }, // ✅ Added Schedule
+    { label: "Schedule", path: "/schedule-page" },
   ];
 
   const confirmLogout = async () => {
