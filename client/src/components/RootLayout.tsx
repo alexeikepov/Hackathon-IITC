@@ -26,7 +26,6 @@ export function RootLayout() {
 
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <WelcomeUser />
         </div>
       </header>
 

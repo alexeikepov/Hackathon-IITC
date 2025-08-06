@@ -4,7 +4,7 @@ import { SyllabusPage } from "@/components/SyllabusPage";
 import { CourseDetailsPage } from "@/pages/CourseDetailsPage";
 import { CoursesPage } from "@/pages/CoursesPage";
 import { CreateCoursePage } from "@/pages/CreateCoursePage";
-import { HomePage } from "@/pages/HomePage";
+import { DashboardPage } from "@/pages/DashboardPage";
 import { ProtectRoutes } from "./protectedRoutes";
 
 import LoginPage from "@/pages/login-page";
@@ -23,7 +23,7 @@ export const Router = createBrowserRouter([
         path: "/",
         element: <RootLayout />,
         children: [
-          { index: true, element: <HomePage /> },
+          { index: true, element: <DashboardPage /> },
           { path: "/syllabus", element: <SyllabusPage /> },
           { path: "/schedule-page", element: <SchedulePage /> },
           { path: "create-course", element: <CreateCoursePage /> },
