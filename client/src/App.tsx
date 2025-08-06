@@ -3,7 +3,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "./context/ThemeProvider";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import SyllabusPage from 
+import { SchedulePage } from "./components/SchedulePage";
+import { SyllabusPage } from "./components/SyllabusPage";
 import LoginPage from "./pages/auth-page";
 import RegisterPage from "./pages/register-page";
 import { AppLayout } from "./components/AppLayout";
@@ -26,6 +27,9 @@ function AppContent() {
         <AppLayout>
           <Routes>
             <Route path="/syllabus" element={<SyllabusPage />} />
+          </Routes>
+          <Routes>
+            <Route path="/SchedulePage" element={<SchedulePage />} />
           </Routes>
         </AppLayout>
       )}

@@ -17,7 +17,7 @@ const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
 
 function addOneHourRange(lastHour: string) {
   const [start, end] = lastHour.split(" - ");
-  const [startH, startM] = start.split(":").map(Number);
+  const [, startM] = start.split(":").map(Number);
   const [endH, endM] = end.split(":").map(Number);
   const newStartH = endH;
   const newEndH = endH + 1;
