@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "./context/ThemeProvider";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SchedulePage } from "./components/SchedulePage";
 import { SyllabusPage } from "./components/SyllabusPage";

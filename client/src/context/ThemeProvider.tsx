@@ -1,4 +1,3 @@
-// src/context/ThemeContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 type Theme = "light" | "dark" | "system";
 const ThemeContext = createContext<{
@@ -11,7 +10,7 @@ const ThemeContext = createContext<{
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(
-    (localStorage.getItem("theme") as Theme) || "system"
+    (localStorage.getItem("theme") as Theme) || "system",
   );
 
   useEffect(() => {

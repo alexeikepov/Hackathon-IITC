@@ -67,7 +67,7 @@ export function RegisterForm({
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
           "flex flex-col relative z-10 w-full max-w-[600px] bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg p-6 sm:p-8 rounded-xl gap-5 shadow-xl",
-          className
+          className,
         )}
         {...props}
       >

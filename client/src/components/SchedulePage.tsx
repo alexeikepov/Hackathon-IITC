@@ -205,8 +205,8 @@ export function SchedulePage() {
           )}
 
           <div className="overflow-x-auto">
-            <table className="w-full border border-gray-300 text-sm table-fixed cursor-pointer">
-              <thead className="bg-gray-100">
+            <table className="w-full border  text-sm table-fixed cursor-pointer">
+              <thead className="">
                 <tr>
                   <th className="border px-2 py-1 w-40">Hour / Day</th>
                   {weekDays.map((day, i) => (
@@ -223,7 +223,7 @@ export function SchedulePage() {
               </thead>
               <tbody>
                 {hours.map((hour, index) => (
-                  <tr key={hour} className="even:bg-gray-50">
+                  <tr key={hour} className="">
                     <td className="border px-2 py-1 font-medium flex items-center gap-2">
                       {isAuth ? (
                         <input
