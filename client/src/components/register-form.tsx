@@ -34,13 +34,10 @@ export function RegisterForm({
     resolver: zodResolver(registerSchema),
   });
 
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit } = methods;
 
   const navigate = useNavigate();
-  const { login: setAuth } = useAuth();
+  const { refetchUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: async (data: RegisterFormData) => {
@@ -58,8 +55,8 @@ export function RegisterForm({
 
       return res.json();
     },
-    onSuccess: (data) => {
-      setAuth(data.user);
+    onSuccess: async () => {
+      await refetchUser();
       navigate("/dashboard");
     },
   });

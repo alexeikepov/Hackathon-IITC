@@ -36,6 +36,7 @@ function AppContent() {
         <ProtectedRoute>
           <AppLayout>
             <Routes>
+              <Route path="/dashboard" />
               <Route path="/syllabus" element={<SyllabusPage />} />
               <Route path="/SchedulePage" element={<SchedulePage />} />
               <Route path="/create-course" element={<CreateCoursePage />} />
