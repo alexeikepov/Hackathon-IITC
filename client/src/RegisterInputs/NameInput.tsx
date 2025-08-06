@@ -11,8 +11,13 @@ export function NameInput() {
 
   return (
     <div className="grid gap-2">
-      <Label htmlFor="name">Name</Label>
-      <Input id="name" type="text" {...register("name")} />
+      <Label htmlFor="name">Full Name</Label>
+      <Input
+        id="name"
+        placeholder="Name Surname"
+        type="text"
+        {...register("name")}
+      />
       <FormError message={errors.name?.message?.toString()} />
     </div>
   );
