@@ -11,6 +11,7 @@ export interface IUser {
   phone: string;
   location?: string,
   militaryUnit?: string,
+  ID:string,
   joinedCourses?: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 
   createdAt: Date;
