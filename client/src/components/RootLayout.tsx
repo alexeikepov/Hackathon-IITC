@@ -1,68 +1,52 @@
 import { Footer } from "./Footer";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { Sidebar } from "./Sidebar";
 import { ModeToggle } from "./ModeToggle";
 import { WelcomeUser } from "./WelcomeUser";
-import { NavLink } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
 
 export function RootLayout() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const navItems = [
-    { label: "Dashboard", path: "/" },
-    { label: "Courses", path: "/courses" },
-    { label: "Create Course", path: "/create-course" },
-    { label: "Syllabus", path: "/syllabus" },
-    { label: "Schedule", path: "/schedule-page" },
-  ];
+  const onLogout = async () => {
+    await logout();
+    // Optional navigation/cleanup here
+  };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-100">
+      {/* Toggle button fixed top-left */}
+
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-background">
-        <h1 className="text-2xl font-bold text-amber-500 tracking-tight select-none">
+      <header className="flex justify-between items-center p-4 border-b border-border">
+        <h1 className="text-3xl font-bold ml-12 text-amber-500 tracking-tight select-none leading-none">
           LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
         </h1>
-
+        <button
+          aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-4 left-4 z-[1000] w-10 h-10 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center justify-center select-none hover:bg-muted dark:hover:bg-muted/30 transition"
+        >
+          {isSidebarOpen ? "×" : "»"}
+        </button>
         <div className="flex items-center gap-4">
           <ModeToggle />
+          <WelcomeUser onLogout={onLogout} />
         </div>
       </header>
 
-      {/* Menu button + collapsible nav */}
-      <div className="px-6 py-2 border-b border-border bg-background">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="px-3 py-1 text-sm border rounded hover:bg-accent transition"
-        >
-          {isOpen ? "<<" : ">>"} Menu
-        </button>
-
-        {isOpen && (
-          <nav className="mt-3 flex flex-col gap-2 bg-gradient-to-b from-white to-gray-100 dark:from-slate-900 dark:to-slate-800 p-3 rounded-md shadow-md">
-            {navItems.map(({ label, path }) => (
-              <NavLink
-                key={path}
-                to={path}
-                className={({ isActive }) =>
-                  `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-muted dark:hover:bg-muted/30"
-                  }`
-                }
-              >
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-        )}
+      {/* Content */}
+      <div
+        className="flex flex-1 transition-margin duration-300 ease-in-out"
+        style={{ marginLeft: isSidebarOpen ? 240 : 0 }}
+      >
+        <Sidebar isOpen={isSidebarOpen} />
+        <main className="flex-1 p-6 overflow-auto">
+          <Outlet />
+        </main>
       </div>
-
-      {/* Main content */}
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
 
       <Footer />
     </div>
