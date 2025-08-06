@@ -2,22 +2,17 @@ import { LoginForm } from "@/components/login-form";
 
 export default function LoginPage() {
   return (
-    <main className="w-full min-h-screen flex items-center justify-center p-4 bg-gray-100">
-      <div
-        className="relative w-full max-w-[1000px] min-h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-cover bg-center flex items-center justify-center"
-        style={{
-          backgroundImage:
-            "url('https://www.israelhayom.co.il/wp-content/uploads/2022/02/15964650464111_b.jpg')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/40" />
-
-        <div className="relative z-10 w-full max-w-[600px] bg-white/70 backdrop-blur-md p-6 sm:p-8 rounded-xl">
-          <h1 className="text-3xl font-bold text-center text-gray-900 mb-6">
-            Welcome Back
+    <main className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] via-[#e0f7fa] to-[#e3f2fd] p-4">
+      <div className="w-full max-w-md space-y-8 bg-white dark:bg-gray-950 rounded-2xl shadow-xl p-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-amber-500 mb-10 tracking-tight select-none">
+            LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
           </h1>
-          <LoginForm />
+          <p className="text-muted-foreground mt-2">
+            Welcome back! Please login to your account
+          </p>
         </div>
+        <LoginForm />
       </div>
     </main>
   );
