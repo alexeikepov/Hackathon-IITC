@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ContactUSPage } from "./components/ContactUSPage";
 import { AboutUsPage } from "./components/AboutUsPage";
 import { ThemeProvider } from "./context/ThemeProvider";
+import { SyllabusPage } from "./components/SyllabusPage";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -30,6 +31,7 @@ function App() {
                   <Route path="/favorites" element={<FavoritesPage />} />
                   <Route path="/contact-as" element={<ContactUSPage />} />
                   <Route path="/about" element={<AboutUsPage />} />
+                  <Route path="/syllabus" element={<SyllabusPage />} />
                 </Routes>
               </main>
               <Footer />

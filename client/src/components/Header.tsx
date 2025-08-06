@@ -16,12 +16,14 @@ export function Header() {
     { label: "Favorites", path: "/favorites" },
     { label: "Add Recipe", path: "/add" },
     { label: "Contact US", path: "/contact-as" },
+    { label: "Syllabus", path: "/syllabus" },
   ];
 
   const navItemsGuest = [
     { label: "Recipes", path: "/" },
     { label: "Contact US", path: "/contact-as" },
     { label: "About US", path: "/about" },
+    { label: "Syllabus", path: "/syllabus" },
   ];
 
   return (
