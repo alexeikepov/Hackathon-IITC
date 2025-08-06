@@ -5,7 +5,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { Router } from "./route/router";
 
-
 function App() {
   return (
     <AuthProvider>

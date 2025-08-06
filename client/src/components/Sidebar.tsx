@@ -27,8 +27,8 @@ export function Sidebar() {
     { label: "Schedule", path: "/schedule-page" }, // ✅ Added Schedule
   ];
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
+    await logout();
     navigate("/");
     setDialogOpen(false);
   };
