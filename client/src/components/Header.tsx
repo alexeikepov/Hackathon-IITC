@@ -30,7 +30,7 @@ export function Header() {
           to="/"
           className="text-2xl font-bold text-green-600 hover:text-green-700 transition"
         >
-          RecipeHub
+          LMS-Hub
         </Link>
 
         <nav className="hidden md:flex gap-6">
