@@ -1,7 +1,7 @@
 import z from "zod";
 import { globalValidationSchemas } from "../../validationSchemas.ts/globalValidation.schema.js";
 
-const createReviewBody = z.object({
+const createCourseBody = z.object({
   rating: z.union([
     z.literal(1),
     z.literal(2),
@@ -12,25 +12,25 @@ const createReviewBody = z.object({
   content: z.string().optional(),
 });
 
-const createReviewSchema = {
+const createCourseSchema = {
   params: globalValidationSchemas.objectIdParams,
-  body: createReviewBody,
+  body: createCourseBody,
 };
 
-const updateReviewSchema = createReviewSchema;
+const updateCourseSchema = createCourseSchema;
 
-const patchReviewSchema = {
+const patchCourseSchema = {
   params: globalValidationSchemas.objectIdParams,
-  body: createReviewBody
+  body: createCourseBody
     .partial()
     .refine((val) => Object.keys(val).length > 0, {
       error: "At least one field must be provided",
     }),
 };
 
-export const reviewValidationSchema = {
-  createReviewBody,
-  createReviewSchema,
-  updateReviewSchema,
-  patchReviewSchema,
+export const courseValidationSchema = {
+  createCourseBody,
+  createCourseSchema,
+  updateCourseSchema,
+  patchCourseSchema,
 };
