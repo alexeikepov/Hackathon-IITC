@@ -9,7 +9,7 @@ import { SyllabusPage } from "./components/SyllabusPage";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/auth-page";
-import { RegisterForm } from "./components/register-form";
+import RegisterPage from "./pages/register-page";
 
 const queryClient = new QueryClient();
 
@@ -23,10 +23,9 @@ function App() {
               <Header />
               <main className="flex-grow flex items-center justify-center overflow-hidden">
                 <Routes>
-             
                   <Route path="/syllabus" element={<SyllabusPage />} />
                   <Route path="/" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterForm />} />
+                  <Route path="/register" element={<RegisterPage />} />
                 </Routes>
               </main>
               <Footer />

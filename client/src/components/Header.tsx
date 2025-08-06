@@ -17,7 +17,7 @@ export function Header() {
   ];
 
   const navItemsGuest = [
-    { label: "Recipes", path: "/" },
+    { label: "Home", path: "/" },
     { label: "Contact US", path: "/contact-as" },
     { label: "About US", path: "/about" },
     { label: "Syllabus", path: "/syllabus" },
