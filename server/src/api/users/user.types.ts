@@ -1,6 +1,5 @@
-import { HydratedDocument, Model } from "mongoose";
-import { IRecipe } from "../recipes/recipe.types.js";
-import { IReview } from "../reviews/review.types.js";
+import mongoose, { HydratedDocument, Model } from "mongoose";
+import { ICourse } from "../courses/course.types.js";
 import { userValidationSchema } from "./user.schema.js";
 import z from "zod";
 
@@ -8,6 +7,12 @@ export interface IUser {
   email: string;
   password: string;
   name: string;
+  role: { type: string, enum: ["student", "admin", "teacher"], default: "student" };
+  phone: string;
+  location?: string,
+  militaryUnit?: string,
+  joinedCourses?: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,11 +29,10 @@ export type PatchUserInput = Partial<
 
 // Response
 export type ResponseUser = Omit<IUser, "password"> & {
-  recipes?: IRecipe[];
-  reviews?: IReview[];
+  courses?: ICourse[];
 };
 
 // Mongo types/interfaces
 export type UserDocument = HydratedDocument<IUser>;
 
-export interface IUserModel extends Model<UserDocument> {}
+export interface IUserModel extends Model<UserDocument> { }

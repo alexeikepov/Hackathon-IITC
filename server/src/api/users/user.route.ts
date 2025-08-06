@@ -10,15 +10,9 @@ const router = Router();
 router.get("/", userController.getAllUsers);
 
 router.get(
-  "/recipes",
+  "/courses",
   authMiddleware.authenticate,
-  userController.getAllRecipes
-);
-
-router.get(
-  "/reviews",
-  authMiddleware.authenticate,
-  userController.getAllReviews
+  userController.getAllCourses
 );
 
 router.get(

@@ -1,35 +1,35 @@
 import { Router } from "express";
-import { reviewController } from "./review.controller.js";
+import { courseController } from "./course.controller.js";
 import { authMiddleware } from "../auth/auth.middleware.js";
 import { validate } from "../../middlewares/validation.middleware.js";
 import { globalValidationSchemas } from "../../validationSchemas.ts/globalValidation.schema.js";
-import { reviewValidationSchema } from "./review.schema.js";
+import { courseValidationSchema } from "./course.schema.js";
 
 const router = Router();
 
-router.get("/", reviewController.getAllReviews);
+router.get("/", courseController.getAllCourses);
 router.get(
   "/:id",
   validate(globalValidationSchemas.getByIdSchema),
-  reviewController.getReviewById
+  courseController.getCourseById
 );
 
 // Protected
 router.use(authMiddleware.authenticate);
 router.put(
   "/:id",
-  validate(reviewValidationSchema.updateReviewSchema),
-  reviewController.updateReview
+  validate(courseValidationSchema.updateCourseSchema),
+  courseController.updateCourse
 );
 router.patch(
   "/:id",
-  validate(reviewValidationSchema.patchReviewSchema),
-  reviewController.patchReview
+  validate(courseValidationSchema.patchCourseSchema),
+  courseController.patchCourse
 );
 router.delete(
   "/:id",
   validate(globalValidationSchemas.getByIdSchema),
-  reviewController.deleteReview
+  courseController.deleteCourse
 );
 
 export default router;
