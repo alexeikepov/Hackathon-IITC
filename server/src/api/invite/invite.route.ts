@@ -3,6 +3,6 @@ import { inviteController } from "./invite.controller.js"
 
 const router = Router();
 
-router.get("/", inviteController.generateInvite);
+router.post("/generate", inviteController.generateInvite);
 
 export default router;
