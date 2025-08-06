@@ -23,7 +23,9 @@ export const Router = createBrowserRouter([
         path: "/",
         element: <RootLayout />,
         children: [
+
           { index: true, element: <DashboardPage /> },
+
           { path: "/syllabus", element: <SyllabusPage /> },
           { path: "/schedule-page", element: <SchedulePage /> },
           { path: "create-course", element: <CreateCoursePage /> },
