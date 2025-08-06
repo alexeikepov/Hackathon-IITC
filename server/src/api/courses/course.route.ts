@@ -7,6 +7,8 @@ import { courseValidationSchema } from "./course.schema.js";
 
 const router = Router();
 
+// Protected
+router.use(authMiddleware.authenticate);
 router.get("/", courseController.getAllCourses);
 router.get(
   "/:id",
@@ -14,8 +16,12 @@ router.get(
   courseController.getCourseById
 );
 
-// Protected
-router.use(authMiddleware.authenticate);
+
+router.post(
+  "/",
+  validate(courseValidationSchema.createCourseSchema),
+  courseController.createCourse
+);
 router.put(
   "/:id",
   validate(courseValidationSchema.updateCourseSchema),
