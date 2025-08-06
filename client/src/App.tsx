@@ -1,32 +1,35 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "./context/ThemeProvider";
-import { SyllabusPage } from "./components/SyllabusPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import LoginPage from "./pages/auth-page";
 import RegisterPage from "./pages/register-page";
+import { SyllabusPage } from "./components/SyllabusPage";
+import { AppLayout } from "./components/AppLayout";
 
 const queryClient = new QueryClient();
 
 function AppContent() {
   const location = useLocation();
 
-  return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-[hsl(223,100%,90%)] via-[#e3f2fd] to-[hsl(228,71%,90%)]">
-      {!["/", "/register"].includes(location.pathname) && <Header />}
+  const isAuthPage = ["/", "/register"].includes(location.pathname);
 
-      <main className="flex-grow flex items-center justify-center overflow-hidden">
+  return (
+    <>
+      {isAuthPage ? (
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/syllabus" element={<SyllabusPage />} />
         </Routes>
-      </main>
-
-      <Footer />
-    </div>
+      ) : (
+        <AppLayout>
+          <Routes>
+            <Route path="/syllabus" element={<SyllabusPage />} />
+          </Routes>
+        </AppLayout>
+      )}
+    </>
   );
 }
 
