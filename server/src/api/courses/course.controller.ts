@@ -10,8 +10,28 @@ import {
   IdParams,
 } from "../../utils/globalTypes.util.js";
 
-const getAllCourses
- = async (
+// ✅ יצירת קורס – עם userId מה-Token
+const createCourse = async (
+  req: AuthenticatedRequest<{}, {}, CreateCourseInput>,
+  res: Response<ICourse>,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?.id;
+    console.log(userId)
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" } as any);
+    }
+    console.log(req.body)
+    const course = await courseService.createCourse(userId, req.body);
+    return res.status(201).json(course);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// ✅ שליפת כל הקורסים
+const getAllCourses = async (
   _req: Request,
   res: Response<ICourse[]>,
   next: NextFunction
@@ -24,6 +44,7 @@ const getAllCourses
   }
 };
 
+// ✅ שליפה לפי מזהה
 const getCourseById = async (
   req: Request<IdParams>,
   res: Response<ICourse>,
@@ -37,6 +58,7 @@ const getCourseById = async (
   }
 };
 
+// ✅ עדכון מלא של קורס
 const updateCourse = async (
   req: AuthenticatedRequest<IdParams, {}, CreateCourseInput>,
   res: Response<ICourse>,
@@ -53,6 +75,7 @@ const updateCourse = async (
   }
 };
 
+// ✅ עדכון חלקי (PATCH)
 const patchCourse = async (
   req: AuthenticatedRequest<IdParams, {}, PatchCourseInput>,
   res: Response<ICourse>,
@@ -69,6 +92,7 @@ const patchCourse = async (
   }
 };
 
+// ✅ מחיקת קורס
 const deleteCourse = async (
   req: AuthenticatedRequest<IdParams>,
   res: Response<ICourse>,
@@ -83,6 +107,7 @@ const deleteCourse = async (
 };
 
 export const courseController = {
+  createCourse,
   getAllCourses,
   getCourseById,
   updateCourse,

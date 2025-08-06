@@ -6,9 +6,13 @@ import { ValidationSchemas } from "../utils/globalTypes.util.js";
 export const validate =
   (schema: ValidationSchemas) =>
   (req: Request, _res: Response, next: NextFunction) => {
+    console.log(req.body)
     try {
+
       if (schema.params) req.params = schema.params.parse(req.params);
-      if (schema.body) req.body = schema.body.parse(req.body);
+      if (schema.body) {
+        console.log(req.body)
+        req.body = schema.body.parse(req.body);}
       if (schema.query) req.query = schema.query.parse(req.query);
       return next();
     } catch (err) {

@@ -42,11 +42,25 @@ const scheduleItem = z
   });
 
 const schema = z.object({
-  title: z.string().min(2, "Title is too short"),
-  description: z.string().min(10, "Description is too short"),
-  syllabusLink: z.string().url("Must be a valid URL"),
-  schedule: z.array(scheduleItem).min(1, "At least one schedule is required"),
-});
+  title: z.string().min(1, "Title is too short"),
+  description: z.string().min(1, "Description is too short"),
+  syllabusLink: z.url("Must be a valid URL"),
+  schedule: z
+    .array(
+      z.object({
+        day: z.string().min(1, "Day is required"),
+        startHour: z.string(),
+        endHour: z.string(),
+        location: z.object({
+          name: z.string(),
+          lat: z.string(),
+          lng: z.string(),
+          radiusMeters: z.string(),
+        }),
+      })
+    )
+    .min(1, "At least one schedule is required"),
+
 
 type FormData = z.infer<typeof schema>;
 
@@ -89,21 +103,25 @@ export function CreateCoursePage() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      schedule: [
-        {
-          day: "",
-          startHour: "",
-          endHour: "",
-          location: {
-            name: "",
-            lat: "",
-            lng: "",
-            radiusMeters: "",
-          },
-        },
-      ],
+   
+defaultValues: {
+  title: "Intro to Web Development",
+  description: "A full introduction to web development covering frontend and backend basics.",
+  syllabusLink: "https://example.com/syllabus.pdf",
+  schedule: [
+    {
+      day: "Monday",
+      startHour: "09:00",
+      endHour: "11:00",
+      location: {
+        name: "Room 204 - Tech Campus",
+        lat: "32.0853", // Tel Aviv latitude example
+        lng: "34.7818", // Tel Aviv longitude example
+        radiusMeters: "50", // Distance for GPS-based check-ins
+      },
     },
+  ],
+}
   });
 
   const { fields, append, remove, move } = useFieldArray({
