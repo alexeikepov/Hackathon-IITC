@@ -24,6 +24,7 @@ export function Sidebar() {
     { label: "Create Course", path: "/create-course" },
     { label: "Messages", path: "/messages" },
     { label: "Syllabus", path: "/syllabus" },
+    { label: "Schedule", path: "/schedulePage" }, // ✅ Added Schedule
   ];
 
   const confirmLogout = () => {

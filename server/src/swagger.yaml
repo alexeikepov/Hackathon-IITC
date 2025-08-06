@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: LMS API
+  version: 1.0.0
+  description: API documentation for the LMS system
+
+servers:
+  - url: http://localhost:3001/api
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: Missing fields or user already exists
+
+  /auth/login:
+    post:
+      summary: Login user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+        400:
+          description: Invalid credentials
+
+  /auth/getMe:
+    get:
+      summary: Get current user details
+      tags: [Auth]
+      responses:
+        200:
+          description: Returns current authenticated user
+        401:
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      summary: Logout current user
+      tags: [Auth]
+      responses:
+        200:
+          description: Logged out successfully
+
+  /users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      responses:
+        200:
+          description: List of users
+
+  /users/{id}:
+    delete:
+      summary: Delete a user by ID
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User deleted
+        404:
+          description: User not found
+
+  /invite/generate:
+    post:
+      summary: Generate one-time invite link
+      tags: [Invite]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+      responses:
+        201:
+          description: Invite link created
+        400:
+          description: Missing email
