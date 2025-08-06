@@ -32,7 +32,7 @@ export function LoginForm({
 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { login: setAuth } = useAuth();
+  const { refetchUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -50,9 +50,9 @@ export function LoginForm({
 
       return res.json();
     },
-    onSuccess: (data) => {
-      setAuth(data.user);
-      navigate("/dashboard");
+    onSuccess: async () => {
+      await refetchUser();
+      navigate("/courses");
     },
   });
 
