@@ -1,18 +1,16 @@
 import { LoginForm } from "@/components/login-form";
 
-export default function LoginPage() {
+export default function AuthPage() {
   return (
-    <main className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] via-[#e0f7fa] to-[#e3f2fd] p-4">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-gray-950 rounded-2xl shadow-xl p-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-amber-500 mb-10 tracking-tight select-none">
-            LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Welcome back! Please login to your account
-          </p>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200 dark:from-[#1f2937] dark:via-[#111827] dark:to-[#1f2937] p-4">
+      <div className="relative w-full max-w-[900px] min-h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-white/60 dark:bg-black/30 backdrop-blur-md flex flex-col items-center justify-start pt-12 px-6 sm:px-10">
+        <h1 className="text-4xl font-bold text-amber-500 tracking-tight select-none text-center mb-8">
+          LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
+        </h1>
+
+        <div className="w-full max-w-[600px]">
+          <LoginForm />
         </div>
-        <LoginForm />
       </div>
     </main>
   );

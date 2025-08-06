@@ -10,12 +10,19 @@ import { useAuth } from "@/context/AuthContext";
 import { NameInput } from "@/RegisterInputs/NameInput";
 import { EmailInput } from "@/RegisterInputs/EmailInput";
 import { PasswordInput } from "@/RegisterInputs/PasswordInput";
+import { ConfirmPasswordInput } from "@/RegisterInputs/ConfirmPasswordInput";
 
-const registerSchema = z.object({
-  name: z.string().min(2, "Name is too short"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, "Name is too short"),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -53,7 +60,7 @@ export function RegisterForm({
     },
     onSuccess: (data) => {
       setAuth(data.user);
-      navigate("/");
+      navigate("/dashboard");
     },
   });
 
@@ -66,17 +73,15 @@ export function RegisterForm({
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg p-6 sm:p-8 rounded-xl gap-5 shadow-xl",
+          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
           className
         )}
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-3xl font-extrabold text-orange-500 dark:text-orange-400">
-            Register
-          </h1>
-          <p className="text-muted-foreground text-sm text-balance">
-            Enter your details below to create a new account
+          <h1 className="text-3xl font-bold text-green-700">REGISTER</h1>
+          <p className="text-muted-foreground text-sm">
+            Create your account to get started
           </p>
         </div>
 
@@ -84,6 +89,7 @@ export function RegisterForm({
           <NameInput />
           <EmailInput />
           <PasswordInput />
+          <ConfirmPasswordInput />
 
           {mutation.error && (
             <p className="text-sm text-red-500 text-center">

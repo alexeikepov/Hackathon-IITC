@@ -12,7 +12,12 @@ export function EmailInput() {
   return (
     <div className="grid gap-2">
       <Label htmlFor="email">Email</Label>
-      <Input id="email" type="email" {...register("email")} />
+      <Input
+        id="email"
+        placeholder="you@example.com"
+        type="email"
+        {...register("email")}
+      />
       <FormError message={errors.email?.message?.toString()} />
     </div>
   );
