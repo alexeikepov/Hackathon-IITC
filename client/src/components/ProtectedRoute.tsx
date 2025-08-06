@@ -1,16 +1,21 @@
-// src/components/ProtectedRoute.tsx
 import { useAuth } from "@/context/AuthContext";
-import { AccessDeniedPage } from "@/pages/AccessDeniedPage";
+import { Navigate } from "react-router-dom";
 
-interface ProtectedRouteProps {
+export function ProtectedRoute({
+  children,
+  redirectIfAuth = false,
+}: {
   children: React.ReactNode;
-}
-
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+  redirectIfAuth?: boolean;
+}) {
   const { isAuth } = useAuth();
 
-  if (!isAuth) {
-    return <AccessDeniedPage />;
+  if (redirectIfAuth && isAuth) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (!redirectIfAuth && !isAuth) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

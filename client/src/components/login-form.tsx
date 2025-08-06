@@ -64,13 +64,15 @@ export function LoginForm({
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={cn(
-        "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
+        "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 dark:bg-black/30 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5 text-gray-800 dark:text-gray-100",
         className
       )}
       {...props}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-bold text-gray-800">LOGIN</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+          LOGIN
+        </h1>
         <p className="text-muted-foreground text-sm">
           Welcome back! Enter your credentials to continue.
         </p>
@@ -103,7 +105,7 @@ export function LoginForm({
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               onClick={() => setShowPassword((prev) => !prev)}
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -135,7 +137,7 @@ export function LoginForm({
         Don't have an account?{" "}
         <a
           href="/register"
-          className="underline underline-offset-4 text-gray-800 font-bold"
+          className="underline underline-offset-4 text-green-700 dark:text-green-400 font-bold"
         >
           Register
         </a>

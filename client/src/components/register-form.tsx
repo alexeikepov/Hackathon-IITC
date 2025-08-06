@@ -57,7 +57,7 @@ export function RegisterForm({
     },
     onSuccess: async () => {
       await refetchUser();
-      navigate("/dashboard");
+      navigate("/courses");
     },
   });
 
@@ -70,13 +70,15 @@ export function RegisterForm({
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
+          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 dark:bg-black/30 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5 text-gray-800 dark:text-gray-100",
           className
         )}
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">REGISTER</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+            REGISTER
+          </h1>
           <p className="text-muted-foreground text-sm">
             Create your account to get started
           </p>
@@ -109,7 +111,10 @@ export function RegisterForm({
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/" className="font-bold underline underline-offset-4">
+          <Link
+            to="/"
+            className="font-bold underline underline-offset-4 text-green-700 dark:text-green-400"
+          >
             Login
           </Link>
         </div>
