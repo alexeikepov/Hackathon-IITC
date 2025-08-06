@@ -3,9 +3,9 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 
 import { AuthProvider } from "@/context/AuthContext";
-
 import { ThemeProvider } from "./context/ThemeProvider";
 import { SyllabusPage } from "./components/SyllabusPage";
+import { SchedulePage } from "./components/SchedulePage"; // <-- added
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/auth-page";
@@ -24,6 +24,8 @@ function App() {
               <main className="flex-grow flex items-center justify-center overflow-hidden">
                 <Routes>
                   <Route path="/syllabus" element={<SyllabusPage />} />
+                  <Route path="/schedule" element={<SchedulePage />} />{" "}
+                  {/* <-- added */}
                   <Route path="/" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                 </Routes>

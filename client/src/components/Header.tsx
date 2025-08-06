@@ -14,6 +14,7 @@ export function Header() {
     { label: "Contact US", path: "/contact-as" },
     { label: "About US", path: "/about" },
     { label: "Syllabus", path: "/syllabus" },
+    { label: "Schedule", path: "/schedule" }, // <-- added
   ];
 
   const navItemsGuest = [
@@ -21,6 +22,7 @@ export function Header() {
     { label: "Contact US", path: "/contact-as" },
     { label: "About US", path: "/about" },
     { label: "Syllabus", path: "/syllabus" },
+    { label: "Schedule", path: "/schedule" }, // <-- added
   ];
 
   return (
