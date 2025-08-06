@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const USERNAME = process.env.USERNAME;
+const USERNAME = process.env.USER_NAME;
 const PASSWORD = process.env.PASSWORD;
 
 if (!USERNAME || !PASSWORD) {
