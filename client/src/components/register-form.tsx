@@ -53,7 +53,7 @@ export function RegisterForm({
     },
     onSuccess: (data) => {
       setAuth(data.user);
-      navigate("/dashboard");
+      navigate("/");
     },
   });
 
@@ -66,13 +66,15 @@ export function RegisterForm({
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
+          "flex flex-col relative z-10 w-full max-w-[600px] bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg p-6 sm:p-8 rounded-xl gap-5 shadow-xl",
           className
         )}
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
+          <h1 className="text-3xl font-extrabold text-orange-500 dark:text-orange-400">
+            Register
+          </h1>
           <p className="text-muted-foreground text-sm text-balance">
             Enter your details below to create a new account
           </p>
@@ -97,7 +99,7 @@ export function RegisterForm({
             {mutation.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              "Sign Up"
+              "Register"
             )}
           </Button>
         </div>
