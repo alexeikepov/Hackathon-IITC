@@ -44,16 +44,4 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   next();
 });
 
-userSchema.virtual("recipes", {
-  ref: "Recipe",
-  localField: "_id",
-  foreignField: "creator",
-});
-
-userSchema.virtual("reviews", {
-  ref: "Review",
-  localField: "_id",
-  foreignField: "reviewer",
-});
-
 export const UserModel = model<UserDocument, IUserModel>("User", userSchema);
