@@ -4,9 +4,9 @@ import { globalValidationSchemas } from "../../validationSchemas.ts/globalValida
 // ⬅️ Location schema for schedule
 const locationSchema = z.object({
   name: z.string(),
-  lat: z.number(),
-  lng: z.number(),
-  radiusMeters: z.number(),
+  lat: z.string(),
+  lng: z.string(),
+  radiusMeters: z.string(),
 });
 
 // ⬅️ Schedule item schema
