@@ -9,16 +9,13 @@ import { CourseModel } from "../courses/course.model.js";
 
 const getAllUsers = () => {
   return UserModel.find()
-    .populate({ path: "reviews", select: "-__v" })
-    .populate({ path: "recipes", select: "-__v" })
     .select("-password -__v");
 };
 
 const getUserById = async (id: string) => {
   const user = await UserModel.findById(id)
     .select("-password -__v")
-    .populate({ path: "recipes", select: "-__v" })
-    .populate({ path: "reviews", select: "-__v" });
+   
   if (!user) {
     throw new AppError(`User with ID: ${id} not found.`, 404);
   }
@@ -48,8 +45,7 @@ const updateUser = async (id: string, userData: UpdateUserInput) => {
     new: true,
   })
     .select("-password -__v")
-    .populate({ path: "recipes", select: "-__v" })
-    .populate({ path: "reviews", select: "-__v" });
+   
   if (!updatedUser) {
     throw new AppError("Invalid credentials.", 400);
   }
@@ -62,8 +58,7 @@ const patchUser = async (id: string, userData: PatchUserInput) => {
     new: true,
   })
     .select("-password -__v")
-    .populate({ path: "recipes", select: "-__v" })
-    .populate({ path: "reviews", select: "-__v" });
+  
   if (!updatedUser) {
     throw new AppError(`User with ID: ${id} not found.`, 404);
   }
@@ -73,8 +68,7 @@ const patchUser = async (id: string, userData: PatchUserInput) => {
 const deleteUser = async (id: string) => {
   const deletedUser = await UserModel.findByIdAndDelete(id)
     .select("-password -__v")
-    .populate({ path: "recipes", select: "-__v" })
-    .populate({ path: "reviews", select: "-__v" });
+  
   if (!deletedUser) {
     throw new AppError(`User with ID: ${id} not found.`, 404);
   }
@@ -84,8 +78,6 @@ const deleteUser = async (id: string) => {
 const getAllCourses = (id: string) => {
   return CourseModel.find({ reviewer: id })
     .select("-__v")
-    .populate({ path: "reviewer", select: "-__v -password" })
-    .populate({ path: "recipe", select: "-__v" });
 };
 
 export const userService = {
