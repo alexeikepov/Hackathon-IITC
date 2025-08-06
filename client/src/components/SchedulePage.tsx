@@ -251,7 +251,7 @@ export function SchedulePage() {
                       return (
                         <td
                           key={day + hour}
-                          className="border px-2 py-1 align-top min-h-[70px] hover:bg-green-50"
+                          className="border px-2 py-1 align-top min-h-[70px] hover:bg-amber-200"
                           onClick={() => onSlotClick(day, hour)}
                           role={isAuth ? "button" : undefined}
                           tabIndex={isAuth ? 0 : undefined}

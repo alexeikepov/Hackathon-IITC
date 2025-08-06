@@ -64,15 +64,15 @@ export function LoginForm({
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={cn(
-        "flex flex-col relative z-10 w-full max-w-[600px] bg-white/70 dark:bg-black/30 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5 text-gray-800 dark:text-gray-100",
-        className
+        "flex flex-col relative z-10 w-full max-w-[600px]/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
+        className,
+
       )}
       {...props}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-          LOGIN
-        </h1>
+        <h1 className="text-3xl font-bold">LOGIN</h1>
+
         <p className="text-muted-foreground text-sm">
           Welcome back! Enter your credentials to continue.
         </p>
