@@ -12,7 +12,7 @@ import cookieParser from "cookie-parser";
 
 // Read from .env
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 if (!PORT) {
   console.log("Error reading for .env");

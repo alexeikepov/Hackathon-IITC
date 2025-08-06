@@ -2,6 +2,7 @@
 import crypto from "crypto";
 import InviteToken from "./inviteToken.model.js";
 import { Request, Response } from "express";
+import { sendInviteEmail } from "./sendInvite.js";
 
 const generateInvite = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -16,6 +17,8 @@ const generateInvite = async (req: Request, res: Response): Promise<void> => {
     await invite.save();
 
     const registrationLink = `${process.env.CLIENT_URL}/register?token=${token}`;
+    const resInvite = await sendInviteEmail(email, registrationLink);
+    console.log(resInvite);
     res.status(201).json({ link: registrationLink });
   } catch (err) {
     console.error("Error generating invite:", err);

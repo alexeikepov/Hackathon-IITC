@@ -12,10 +12,17 @@ const register = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...newUser } = (
-      await authService.register(req.body)
-    ).toObject();
-    return res.status(201).json(newUser);
+
+    const { newUser, token } = await authService.register(req.body)
+
+    const { password, ...userWithoutPassword } = newUser.toObject();
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60,
+    });
+    return res.status(201).json(userWithoutPassword);
   } catch (err) {
     return next(err);
   }
@@ -63,14 +70,23 @@ const me = async (
     return next(err);
   }
 };
-const showRegisterPage = async (req: Request, res: Response) => {
+const showRegisterPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction) => {
   const { token } = req.query;
+  try {
 
-  const invite = await inviteTokenModel.findOne({ token, used: false, expiresAt: { $gt: new Date() } });
-  if (!invite) {
-    return res.status(400).send("Invalid or expired registration link");
+    const invite = await inviteTokenModel.findOne({ token, used: false, expiresAt: { $gt: new Date() } });
+    if (!invite) {
+      return res.status(400).send("Invalid or expired registration link");
+    }
+    return res.status(200).json(invite);
+  } catch (err) {
+    return next({ error: err, message: "showRegisterPage error" }
+    );
+
   }
 
-  // render registration form
 };
 export const authController = { login, register, logout, me, showRegisterPage };

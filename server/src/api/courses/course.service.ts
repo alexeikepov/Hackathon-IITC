@@ -6,35 +6,33 @@ const getAllCourses = () => {
   return CourseModel.find()
     .select("-__v")
     .populate({ path: "course", select: "-__v -password" })
-    .populate({ path: "recipe", select: "-__v" });
 };
 
 const getCourseById = async (id: string) => {
-  const review = await CourseModel.findById(id)
+  const course = await CourseModel.findById(id)
     .select("-__v")
     .populate({ path: "course", select: "-__v -password" })
-    .populate({ path: "recipe", select: "-__v" });
-  if (!review) {
+  if (!course) {
     throw new AppError(`Course with ID: ${id} not found.`, 404);
   }
-  return review;
+  return course;
 };
 
 const createCourse = async (
   userId: string,
   recipeId: string,
-  reviewData: CreateCourseInput
+  courseData: CreateCourseInput
 ) => {
   const savedCourse = await CourseModel.create({
-    ...reviewData,
+    ...courseData,
     recipe: recipeId,
     course: userId,
   });
   return getCourseById(savedCourse._id.toString());
 };
 
-const updateCourse = async (id: string, reviewData: CreateCourseInput) => {
-  const updatedCourse = await CourseModel.findByIdAndUpdate(id, reviewData, {
+const updateCourse = async (id: string, courseData: CreateCourseInput) => {
+  const updatedCourse = await CourseModel.findByIdAndUpdate(id, courseData, {
     runValidators: true,
     new: true,
   })
@@ -47,8 +45,8 @@ const updateCourse = async (id: string, reviewData: CreateCourseInput) => {
   return updatedCourse;
 };
 
-const patchCourse = async (id: string, reviewData: PatchCourseInput) => {
-  const updatedCourse = await CourseModel.findByIdAndUpdate(id, reviewData, {
+const patchCourse = async (id: string, courseData: PatchCourseInput) => {
+  const updatedCourse = await CourseModel.findByIdAndUpdate(id, courseData, {
     runValidators: true,
     new: true,
   })

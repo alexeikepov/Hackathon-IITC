@@ -17,8 +17,7 @@ const getAllCourses
   next: NextFunction
 ) => {
   try {
-    const courses = await courseService.getAllCourses
-    ();
+    const courses = await courseService.getAllCourses();
     return res.status(200).json(courses);
   } catch (err) {
     return next(err);

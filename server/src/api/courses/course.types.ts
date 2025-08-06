@@ -13,7 +13,7 @@ export interface ICourse {
     day: string,
     startHour: string,
     endHour: string,
-    location: {
+    location?: {
       name: string,
       lat: Number,
       lng: Number,

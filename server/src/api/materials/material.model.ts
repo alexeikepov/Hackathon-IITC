@@ -7,7 +7,10 @@ const materialSchema = new mongoose.Schema({
   type: { type: String, enum: ["video", "pdf", "github", "link"] },
   url: String,
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 export default mongoose.model("Material", materialSchema);
