@@ -8,6 +8,38 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle, Loader2 } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+// Zod schema with validation
+const scheduleItem = z
+  .object({
+    day: z.string().min(1, "Day is required"),
+    startHour: z.string(),
+    endHour: z.string(),
+    location: z.object({
+      name: z.string(),
+      lat: z.string(),
+      lng: z.string(),
+      radiusMeters: z.string(),
+    }),
+  })
+  .refine((data) => data.startHour < data.endHour, {
+    message: "Start time must be before end time",
+    path: ["endHour"],
+  });
 
 const schema = z.object({
   title: z.string().min(1, "Title is too short"),
@@ -28,9 +60,38 @@ const schema = z.object({
       })
     )
     .min(1, "At least one schedule is required"),
-});
+
 
 type FormData = z.infer<typeof schema>;
+
+// Sortable wrapper for each schedule block
+function SortableScheduleItem({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="cursor-move"
+    >
+      {children}
+    </div>
+  );
+}
 
 export function CreateCoursePage() {
   const navigate = useNavigate();
@@ -63,10 +124,12 @@ defaultValues: {
 }
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: "schedule",
   });
+
+  const sensors = useSensors(useSensor(PointerSensor));
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -88,6 +151,15 @@ defaultValues: {
     mutation.mutate(data);
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = fields.findIndex((f) => f.id === active.id);
+    const newIndex = fields.findIndex((f) => f.id === over.id);
+    move(oldIndex, newIndex);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-8 space-y-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-border my-10">
       <h1 className="text-3xl font-bold text-center text-green-700 dark:text-green-400">
@@ -97,12 +169,8 @@ defaultValues: {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Title */}
         <div>
-          <Label className="text-base">Title</Label>
-          <Input
-            {...register("title")}
-            placeholder="Enter course title"
-            className="mt-1"
-          />
+          <Label>Title</Label>
+          <Input {...register("title")} placeholder="Course title" />
           {errors.title && (
             <p className="text-sm text-red-500">{errors.title.message}</p>
           )}
@@ -110,11 +178,10 @@ defaultValues: {
 
         {/* Description */}
         <div>
-          <Label className="text-base">Description</Label>
+          <Label>Description</Label>
           <Textarea
             {...register("description")}
-            placeholder="Brief course overview..."
-            className="mt-1"
+            placeholder="About course..."
           />
           {errors.description && (
             <p className="text-sm text-red-500">{errors.description.message}</p>
@@ -123,12 +190,8 @@ defaultValues: {
 
         {/* Syllabus */}
         <div>
-          <Label className="text-base">Syllabus Link</Label>
-          <Input
-            {...register("syllabusLink")}
-            placeholder="https://example.com/syllabus"
-            className="mt-1"
-          />
+          <Label>Syllabus Link</Label>
+          <Input {...register("syllabusLink")} placeholder="https://..." />
           {errors.syllabusLink && (
             <p className="text-sm text-red-500">
               {errors.syllabusLink.message}
@@ -142,77 +205,89 @@ defaultValues: {
             Schedule
           </h3>
 
-          <div className="space-y-6">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label>Day</Label>
-                    <Input
-                      {...register(`schedule.${index}.day`)}
-                      placeholder="e.g., Monday"
-                    />
-                  </div>
-                  <div>
-                    <Label>Start Hour</Label>
-                    <Input
-                      type="time"
-                      {...register(`schedule.${index}.startHour`)}
-                    />
-                  </div>
-                  <div>
-                    <Label>End Hour</Label>
-                    <Input
-                      type="time"
-                      {...register(`schedule.${index}.endHour`)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Location Name</Label>
-                    <Input
-                      {...register(`schedule.${index}.location.name`)}
-                      placeholder="Room name"
-                    />
-                  </div>
-                  <div>
-                    <Label>Latitude</Label>
-                    <Input
-                      type="number"
-                      step="any"
-                      {...register(`schedule.${index}.location.lat`)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Longitude</Label>
-                    <Input
-                      type="number"
-                      step="any"
-                      {...register(`schedule.${index}.location.lng`)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Radius (meters)</Label>
-                    <Input
-                      type="number"
-                      {...register(`schedule.${index}.location.radiusMeters`)}
-                    />
-                  </div>
-                </div>
+          <DndContext
+            collisionDetection={closestCenter}
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={fields.map((f) => f.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-6">
+                {fields.map((field, index) => (
+                  <SortableScheduleItem key={field.id} id={field.id}>
+                    <div className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label>Day</Label>
+                          <Input {...register(`schedule.${index}.day`)} />
+                        </div>
+                        <div>
+                          <Label>Start</Label>
+                          <Input
+                            type="time"
+                            {...register(`schedule.${index}.startHour`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>End</Label>
+                          <Input
+                            type="time"
+                            {...register(`schedule.${index}.endHour`)}
+                          />
+                          {errors.schedule?.[index]?.endHour && (
+                            <p className="text-sm text-red-500">
+                              {errors.schedule[index]?.endHour?.message}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <Label>Location</Label>
+                          <Input
+                            {...register(`schedule.${index}.location.name`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>Lat</Label>
+                          <Input
+                            type="number"
+                            step="any"
+                            {...register(`schedule.${index}.location.lat`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>Lng</Label>
+                          <Input
+                            type="number"
+                            step="any"
+                            {...register(`schedule.${index}.location.lng`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>Radius</Label>
+                          <Input
+                            type="number"
+                            {...register(
+                              `schedule.${index}.location.radiusMeters`
+                            )}
+                          />
+                        </div>
+                      </div>
 
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => remove(index)}
-                  className="mt-2"
-                >
-                  Remove Schedule
-                </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => remove(index)}
+                      >
+                        Remove Schedule
+                      </Button>
+                    </div>
+                  </SortableScheduleItem>
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
 
           <Button
             type="button"
@@ -223,7 +298,12 @@ defaultValues: {
                 day: "",
                 startHour: "",
                 endHour: "",
-                location: { name: "", lat: "", lng: "", radiusMeters: "" },
+                location: {
+                  name: "",
+                  lat: "",
+                  lng: "",
+                  radiusMeters: "",
+                },
               })
             }
           >
