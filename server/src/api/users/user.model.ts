@@ -1,24 +1,20 @@
 import { Schema, model } from "mongoose";
 import { UserDocument, IUserModel } from "./user.types.js";
 import { authService } from "../auth/auth.service.js";
+// models/User.ts
+import mongoose from "mongoose";
 
 const userSchema = new Schema<UserDocument, IUserModel>(
   {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-  },
-  {
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+  role: { type: String, enum: ["student", "admin", "teacher"], default: "student" },
+  phone: String,
+  location: String,
+  militaryUnit: String,
+  joinedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+},{
     timestamps: true,
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
@@ -46,18 +42,6 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   if (update.$set?.password) update.$set.password = hashed;
 
   next();
-});
-
-userSchema.virtual("recipes", {
-  ref: "Recipe",
-  localField: "_id",
-  foreignField: "creator",
-});
-
-userSchema.virtual("reviews", {
-  ref: "Review",
-  localField: "_id",
-  foreignField: "reviewer",
 });
 
 export const UserModel = model<UserDocument, IUserModel>("User", userSchema);

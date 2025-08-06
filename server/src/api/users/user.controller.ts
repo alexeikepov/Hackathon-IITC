@@ -5,8 +5,7 @@ import {
   AuthenticatedRequest,
   IdParams,
 } from "../../utils/globalTypes.util.js";
-import { IRecipe } from "../recipes/recipe.types.js";
-import { IReview } from "../reviews/review.types.js";
+import { ICourse } from "../courses/course.types.js";
 
 const getAllUsers = async (
   _req: Request,
@@ -75,26 +74,14 @@ const deleteUser = async (
   }
 };
 
-const getAllRecipes = async (
-  req: AuthenticatedRequest,
-  res: Response<IRecipe[]>,
-  next: NextFunction
-) => {
-  try {
-    const recipes = await userService.getAllRecipes(req.user!.id);
-    return res.status(200).json(recipes);
-  } catch (err) {
-    return next(err);
-  }
-};
 
-const getAllReviews = async (
+const getAllCourses = async (
   req: AuthenticatedRequest,
-  res: Response<IReview[]>,
+  res: Response<ICourse[]>,
   next: NextFunction
 ) => {
   try {
-    const reviews = await userService.getAllReviews(req.user!.id);
+    const reviews = await userService.getAllCourses(req.user!.id);
     return res.status(200).json(reviews);
   } catch (err) {
     return next(err);
@@ -107,6 +94,5 @@ export const userController = {
   updateUser,
   patchUser,
   deleteUser,
-  getAllRecipes,
-  getAllReviews,
+  getAllCourses,
 };
