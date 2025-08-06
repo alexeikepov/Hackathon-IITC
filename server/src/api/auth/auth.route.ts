@@ -13,7 +13,7 @@ router.post(
   validate(userValidationSchema.createUserSchema),
   authController.register
 );
-router.get("/showRegister",  authController.showRegisterPage);
+router.post("/showRegister",  authController.showRegisterPage);
 router.get("/me", authMiddleware.authenticate, authController.me);
 
 export default router;
