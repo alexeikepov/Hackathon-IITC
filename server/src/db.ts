@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const USERNAME = process.env.USER_NAME;
-const PASSWORD = process.env.PASSWORD;
+const USERNAME = process.env.MONGODB_USERNAME;
+const PASSWORD = process.env.MONGODB_PASSWORD;
 
 if (!USERNAME || !PASSWORD) {
     console.log("Error reading for .env");

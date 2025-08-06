@@ -3,10 +3,11 @@ import morgan from "morgan";
 import initMongo from "./db.js"
 import dotenv from "dotenv";
 import cors from "cors";
+import { setupSwagger } from "./swagger.js"; // 👈 add this near the top
 
 import { AppError } from "./utils/appError.util.js";
 import { globalErrorHandler } from "./middlewares/errorHandler.middleware.js";
-import router from "./api/index.js";
+import router from "./api/route.js";
 import cookieParser from "cookie-parser";
 
 // Read from .env
@@ -32,6 +33,7 @@ app.use(
     credentials: true,
   })
 );
+setupSwagger(app);
 
 // Api endpoints
 app.use("/api", router);
