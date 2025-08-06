@@ -24,17 +24,17 @@ export function CoursesPage() {
     return <p className="text-center text-red-500">Error loading courses</p>;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+    <div className="max-w-7xl mx-auto px-4 py-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {courses?.map((course: Course) => (
         <Link key={course._id} to={`/courses/${course._id}`}>
-          <Card className="hover:shadow-md transition cursor-pointer">
+          <Card className="h-full min-h-[180px] flex flex-col justify-between bg-white dark:bg-slate-900 border border-border hover:shadow-xl hover:border-green-500 transition-all cursor-pointer">
             <CardHeader>
-              <CardTitle>{course.title}</CardTitle>
+              <CardTitle className="text-lg text-green-700 dark:text-green-400">
+                {course.title}
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {course.description}
-              </p>
+            <CardContent className="text-sm text-muted-foreground">
+              <p className="line-clamp-4">{course.description}</p>
             </CardContent>
           </Card>
         </Link>

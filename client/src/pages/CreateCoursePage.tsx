@@ -7,15 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { PlusCircle, Loader2 } from "lucide-react";
 
 const schema = z.object({
-  title: z.string().min(2),
-  description: z.string().min(10),
-  syllabusLink: z.string().url(),
+  title: z.string().min(2, "Title is too short"),
+  description: z.string().min(10, "Description is too short"),
+  syllabusLink: z.string().url("Must be a valid URL"),
   schedule: z
     .array(
       z.object({
-        day: z.string(),
+        day: z.string().min(1, "Day is required"),
         startHour: z.string(),
         endHour: z.string(),
         location: z.object({
@@ -32,6 +33,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function CreateCoursePage() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -56,12 +59,10 @@ export function CreateCoursePage() {
     },
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "schedule",
   });
-
-  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -72,15 +73,11 @@ export function CreateCoursePage() {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to create course");
-      }
+      if (!res.ok) throw new Error("Failed to create course");
 
       return res.json();
     },
-    onSuccess: () => {
-      navigate("/courses");
-    },
+    onSuccess: () => navigate("/courses"),
   });
 
   const onSubmit = (data: FormData) => {
@@ -88,29 +85,46 @@ export function CreateCoursePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-center">Create New Course</h1>
+    <div className="max-w-4xl mx-auto p-8 space-y-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-border my-10">
+      <h1 className="text-3xl font-bold text-center text-green-700 dark:text-green-400">
+        Create New Course
+      </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Title */}
         <div>
-          <Label>Title</Label>
-          <Input {...register("title")} />
+          <Label className="text-base">Title</Label>
+          <Input
+            {...register("title")}
+            placeholder="Enter course title"
+            className="mt-1"
+          />
           {errors.title && (
             <p className="text-sm text-red-500">{errors.title.message}</p>
           )}
         </div>
 
+        {/* Description */}
         <div>
-          <Label>Description</Label>
-          <Textarea {...register("description")} />
+          <Label className="text-base">Description</Label>
+          <Textarea
+            {...register("description")}
+            placeholder="Brief course overview..."
+            className="mt-1"
+          />
           {errors.description && (
             <p className="text-sm text-red-500">{errors.description.message}</p>
           )}
         </div>
 
+        {/* Syllabus */}
         <div>
-          <Label>Syllabus Link</Label>
-          <Input {...register("syllabusLink")} />
+          <Label className="text-base">Syllabus Link</Label>
+          <Input
+            {...register("syllabusLink")}
+            placeholder="https://example.com/syllabus"
+            className="mt-1"
+          />
           {errors.syllabusLink && (
             <p className="text-sm text-red-500">
               {errors.syllabusLink.message}
@@ -118,44 +132,88 @@ export function CreateCoursePage() {
           )}
         </div>
 
-        <div className="space-y-4">
-          <Label>Schedule</Label>
-          {fields.map((field, index) => (
-            <div key={field.id} className="border p-4 rounded-md space-y-2">
-              <Input placeholder="Day" {...register(`schedule.${index}.day`)} />
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Start Hour"
-                  {...register(`schedule.${index}.startHour`)}
-                />
-                <Input
-                  placeholder="End Hour"
-                  {...register(`schedule.${index}.endHour`)}
-                />
+        {/* Schedule */}
+        <div>
+          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+            Schedule
+          </h3>
+
+          <div className="space-y-6">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label>Day</Label>
+                    <Input
+                      {...register(`schedule.${index}.day`)}
+                      placeholder="e.g., Monday"
+                    />
+                  </div>
+                  <div>
+                    <Label>Start Hour</Label>
+                    <Input
+                      type="time"
+                      {...register(`schedule.${index}.startHour`)}
+                    />
+                  </div>
+                  <div>
+                    <Label>End Hour</Label>
+                    <Input
+                      type="time"
+                      {...register(`schedule.${index}.endHour`)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Location Name</Label>
+                    <Input
+                      {...register(`schedule.${index}.location.name`)}
+                      placeholder="Room name"
+                    />
+                  </div>
+                  <div>
+                    <Label>Latitude</Label>
+                    <Input
+                      type="number"
+                      step="any"
+                      {...register(`schedule.${index}.location.lat`)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Longitude</Label>
+                    <Input
+                      type="number"
+                      step="any"
+                      {...register(`schedule.${index}.location.lng`)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Radius (meters)</Label>
+                    <Input
+                      type="number"
+                      {...register(`schedule.${index}.location.radiusMeters`)}
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => remove(index)}
+                  className="mt-2"
+                >
+                  Remove Schedule
+                </Button>
               </div>
-              <Input
-                placeholder="Location Name"
-                {...register(`schedule.${index}.location.name`)}
-              />
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Lat"
-                  {...register(`schedule.${index}.location.lat`)}
-                />
-                <Input
-                  placeholder="Lng"
-                  {...register(`schedule.${index}.location.lng`)}
-                />
-                <Input
-                  placeholder="Radius Meters"
-                  {...register(`schedule.${index}.location.radiusMeters`)}
-                />
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
+            className="mt-6"
             onClick={() =>
               append({
                 day: "",
@@ -165,12 +223,24 @@ export function CreateCoursePage() {
               })
             }
           >
+            <PlusCircle className="w-4 h-4 mr-2" />
             Add Schedule
           </Button>
         </div>
 
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "Creating..." : "Create Course"}
+        <Button
+          type="submit"
+          className="w-full mt-6 text-lg"
+          disabled={mutation.isPending}
+        >
+          {mutation.isPending ? (
+            <>
+              <Loader2 className="animate-spin w-4 h-4 mr-2" />
+              Creating...
+            </>
+          ) : (
+            "Create Course"
+          )}
         </Button>
       </form>
     </div>
