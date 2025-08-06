@@ -16,7 +16,7 @@ const generateInvite = async (req: Request, res: Response): Promise<void> => {
     const invite = new InviteToken({ token, email });
     await invite.save();
 
-    const registrationLink = `${process.env.CLIENT_URL}/register?token=${token}`;
+    const registrationLink = `${process.env.CLIENT_URL}/showregister?token=${token}`;
     const resInvite = await sendInviteEmail(email, registrationLink);
     console.log(resInvite);
     res.status(201).json({ link: registrationLink });

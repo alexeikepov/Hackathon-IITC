@@ -19,12 +19,12 @@ export function Sidebar() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const navItems = [
-    { label: "Dashboard", path: "/dashboard" },
+    { label: "Dashboard", path: "/" },
     { label: "Courses", path: "/courses" },
     { label: "Create Course", path: "/create-course" },
-    { label: "Messages", path: "/messages" },
+    // { label: "Messages", path: "/messages" },
     { label: "Syllabus", path: "/syllabus" },
-    { label: "Schedule", path: "/schedulePage" }, // ✅ Added Schedule
+    { label: "Schedule", path: "/schedule-page" }, // ✅ Added Schedule
   ];
 
   const confirmLogout = () => {
