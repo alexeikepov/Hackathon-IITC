@@ -76,7 +76,7 @@ export function RegisterForm({
         {...props}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-3xl font-bold text-green-700">REGISTER</h1>
+          <h1 className="text-3xl font-bold text-gray-800">REGISTER</h1>
           <p className="text-muted-foreground text-sm">
             Create your account to get started
           </p>
@@ -109,7 +109,7 @@ export function RegisterForm({
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/" className="underline underline-offset-4">
+          <Link to="/" className="font-bold underline underline-offset-4">
             Login
           </Link>
         </div>
