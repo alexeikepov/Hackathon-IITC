@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -7,6 +13,10 @@ import { SyllabusPage } from "./components/SyllabusPage";
 import LoginPage from "./pages/auth-page";
 import RegisterPage from "./pages/register-page";
 import { AppLayout } from "./components/AppLayout";
+import { CreateCoursePage } from "./pages/CreateCoursePage";
+import { CoursesPage } from "./pages/CoursesPage";
+import { CourseDetailsPage } from "./pages/CourseDetailsPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -23,14 +33,18 @@ function AppContent() {
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
       ) : (
-        <AppLayout>
-          <Routes>
-            <Route path="/syllabus" element={<SyllabusPage />} />
-          </Routes>
-          <Routes>
-            <Route path="/SchedulePage" element={<SchedulePage />} />
-          </Routes>
-        </AppLayout>
+        <ProtectedRoute>
+          <AppLayout>
+            <Routes>
+              <Route path="/syllabus" element={<SyllabusPage />} />
+              <Route path="/SchedulePage" element={<SchedulePage />} />
+              <Route path="/create-course" element={<CreateCoursePage />} />
+              <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/courses/:id" element={<CourseDetailsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AppLayout>
+        </ProtectedRoute>
       )}
     </>
   );

@@ -5,23 +5,27 @@ import { FormError } from "@/components/ui/form-error";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-export function PasswordInput() {
+export function ConfirmPasswordInput() {
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext();
 
   const [show, setShow] = useState(false);
+  const password = watch("password");
 
   return (
     <div className="grid gap-2">
-      <Label htmlFor="password">Password</Label>
+      <Label htmlFor="confirmPassword">Confirm Password</Label>
       <div className="relative">
         <Input
-          id="password"
+          id="confirmPassword"
           placeholder="••••••••"
           type={show ? "text" : "password"}
-          {...register("password")}
+          {...register("confirmPassword", {
+            validate: (value) => value === password || "Passwords do not match",
+          })}
         />
         <button
           type="button"
@@ -31,7 +35,7 @@ export function PasswordInput() {
           {show ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
         </button>
       </div>
-      <FormError message={errors.password?.message?.toString()} />
+      <FormError message={errors.confirmPassword?.message?.toString()} />
     </div>
   );
 }
