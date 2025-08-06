@@ -5,6 +5,7 @@ import { Footer } from "./components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 
 import { ThemeProvider } from "./context/ThemeProvider";
+import { SyllabusPage } from "./components/SyllabusPage";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/auth-page";
@@ -22,6 +23,8 @@ function App() {
               <Header />
               <main className="flex-grow flex items-center justify-center overflow-hidden">
                 <Routes>
+             
+                  <Route path="/syllabus" element={<SyllabusPage />} />
                   <Route path="/" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterForm />} />
                 </Routes>
