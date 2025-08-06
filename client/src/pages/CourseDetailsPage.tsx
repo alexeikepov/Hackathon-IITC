@@ -27,6 +27,7 @@ type Course = {
 
 export function CourseDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     data: course,
@@ -88,8 +89,6 @@ export function CourseDetailsPage() {
   if (isLoading) return <p className="text-center">Loading course...</p>;
   if (error || !course)
     return <p className="text-center text-red-500">Course not found.</p>;
-
-  const navigate = useNavigate();
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
