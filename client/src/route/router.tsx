@@ -7,7 +7,7 @@ import { CreateCoursePage } from "@/pages/CreateCoursePage";
 import { HomePage } from "@/pages/HomePage";
 import { ProtectRoutes } from "./protectedRoutes";
 
-import LoginPage from "@/pages/auth-page";
+import LoginPage from "@/pages/login-page";
 import RegistrationPage from "@/pages/register-page";
 import { createBrowserRouter } from "react-router-dom";
 
