@@ -4,6 +4,7 @@ import { LoginInput, RegisterInput } from "./auth.types.js";
 import { ResponseUser } from "../users/user.types.js";
 import { AuthenticatedRequest } from "../../utils/globalTypes.util.js";
 import { userService } from "../users/user.service.js";
+import inviteTokenModel from "../invite/inviteToken.model.js";
 
 const register = async (
   req: Request<{}, {}, RegisterInput>,
@@ -62,5 +63,14 @@ const me = async (
     return next(err);
   }
 };
+const showRegisterPage = async (req: Request, res: Response) => {
+  const { token } = req.query;
 
-export const authController = { login, register, logout, me };
+  const invite = await inviteTokenModel.findOne({ token, used: false, expiresAt: { $gt: new Date() } });
+  if (!invite) {
+    return res.status(400).send("Invalid or expired registration link");
+  }
+
+  // render registration form
+};
+export const authController = { login, register, logout, me, showRegisterPage };

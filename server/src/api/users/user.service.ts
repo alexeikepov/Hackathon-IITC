@@ -5,8 +5,7 @@ import {
   PatchUserInput,
   UpdateUserInput,
 } from "./user.types.js";
-import { RecipeModel } from "../recipes/recipe.model.js";
-import { ReviewModel } from "../reviews/review.model.js";
+import { CourseModel } from "../courses/course.model.js";
 
 const getAllUsers = () => {
   return UserModel.find()
@@ -82,15 +81,8 @@ const deleteUser = async (id: string) => {
   return deletedUser;
 };
 
-const getAllRecipes = (id: string) => {
-  return RecipeModel.find({ creator: id })
-    .select("-__v")
-    .populate({ path: "reviews", select: "-__v" })
-    .populate({ path: "creator", select: "-__v -password" });
-};
-
-const getAllReviews = (id: string) => {
-  return ReviewModel.find({ reviewer: id })
+const getAllCourses = (id: string) => {
+  return CourseModel.find({ reviewer: id })
     .select("-__v")
     .populate({ path: "reviewer", select: "-__v -password" })
     .populate({ path: "recipe", select: "-__v" });
@@ -104,6 +96,5 @@ export const userService = {
   updateUser,
   patchUser,
   deleteUser,
-  getAllRecipes,
-  getAllReviews,
+  getAllCourses,
 };
