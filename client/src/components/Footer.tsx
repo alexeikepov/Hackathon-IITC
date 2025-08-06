@@ -19,7 +19,7 @@ export function Footer() {
   const navItems = isAuth ? navItemsAuth : navItemsGuest;
 
   return (
-    <footer className="bg-white dark:bg-[hsl(240,27%,14%)] shadow-inner mt-12 transition-colors">
+    <footer className="bg-white dark:bg-[hsl(240,27%,14%)] shadow-inner transition-colors">
       <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-gray-600 dark:text-[#e4e4e7]">
         <Link
           to="/"
