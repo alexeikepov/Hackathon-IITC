@@ -2,20 +2,17 @@ import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { AuthDialog } from "@/api/auth/AuthDialog";
 import { ModeToggle } from "@/components/ModeToggle";
 import { useAuth } from "@/context/AuthContext";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const { isAuth, user, logout } = useAuth();
 
   const navItemsAuth = [
-    { label: "Recipes", path: "/" },
-    { label: "Favorites", path: "/favorites" },
-    { label: "Add Recipe", path: "/add" },
+    { label: "Home", path: "/" },
     { label: "Contact US", path: "/contact-as" },
+    { label: "About US", path: "/about" },
     { label: "Syllabus", path: "/syllabus" },
   ];
 
@@ -66,7 +63,16 @@ export function Header() {
               </Button>
             </>
           ) : (
-            <AuthDialog />
+            <>
+              <Link to="/login">
+                <Button variant="outline" size="sm">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button size="sm">Sign Up</Button>
+              </Link>
+            </>
           )}
         </div>
 
@@ -118,7 +124,18 @@ export function Header() {
                 Logout
               </Button>
             ) : (
-              <AuthDialog />
+              <>
+                <Link to="/login">
+                  <Button variant="outline" size="sm" className="w-full">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button size="sm" className="w-full">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
             )}
           </div>
         </nav>
