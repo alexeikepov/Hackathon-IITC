@@ -30,7 +30,11 @@ const verifyToken = (token: string) => {
 
 const register = async (userData: RegisterInput) => {
   const newUser = await userService.createUser(userData);
-  return newUser;
+  const payload = { id: newUser._id.toString(), email: newUser.email };
+
+  const token = generateToken(payload);
+
+  return {newUser,token};
 };
 
 const login = async (userData: LoginInput) => {

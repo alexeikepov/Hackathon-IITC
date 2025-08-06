@@ -36,10 +36,15 @@ export function Sidebar() {
   return (
     <aside className="w-64 h-screen sticky top-0 flex flex-col justify-between border-r border-border bg-gradient-to-b from-white to-gray-100 dark:from-slate-900 dark:to-slate-800">
       <div className="p-6">
-        <h1 className="text-3xl font-bold text-amber-500 mb-10 tracking-tight select-none">
-          LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
-        </h1>
+        {/* Header row with title + theme toggle */}
+        <div className="flex items-center justify-between mb-10">
+          <h1 className="text-3xl font-bold text-amber-500 tracking-tight select-none">
+            LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
+          </h1>
+          <ModeToggle />
+        </div>
 
+        {/* Navigation */}
         <nav className="flex flex-col gap-2">
           {navItems.map(({ label, path }) => (
             <NavLink
@@ -59,13 +64,11 @@ export function Sidebar() {
         </nav>
       </div>
 
+      {/* Bottom section (only user + logout now) */}
       <div className="p-6 flex flex-col gap-4 border-t border-border">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {user?.name}
-          </span>
-          <ModeToggle />
-        </div>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {user?.name}
+        </span>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>

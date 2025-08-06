@@ -6,19 +6,20 @@ import mongoose from "mongoose";
 
 const userSchema = new Schema<UserDocument, IUserModel>(
   {
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  role: { type: String, enum: ["student", "admin", "teacher"], default: "student" },
-  phone: String,
-  location: String,
-  militaryUnit: String,
-  joinedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
-},{
-    timestamps: true,
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true },
-  }
+    name: String,
+    email: { type: String, unique: true },
+    password: String,
+    role: { type: String, enum: ["student", "admin", "teacher"], default: "student" },
+    phone: String,
+    location: String,
+    militaryUnit: String,
+    ID: String,
+    joinedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  }, {
+  timestamps: true,
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
+}
 );
 
 userSchema.pre("save", async function (next) {
