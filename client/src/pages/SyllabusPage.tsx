@@ -1,26 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
+import { fileToBase64 } from "@/utils/toBase64";
 
 type FormData = {
   syllabus: FileList;
 };
 
+const STORAGE_KEY = "uploaded_syllabus_base64";
+
 export function SyllabusPage() {
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [pdfData, setPdfData] = useState<string | null>(null);
   const { register, handleSubmit, reset } = useForm<FormData>();
   const { isAuth } = useAuth();
 
-  const onSubmit = (data: FormData) => {
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) setPdfData(saved);
+  }, []);
+
+  const onSubmit = async (data: FormData) => {
     const file = data.syllabus?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setPdfUrl(url);
+      const base64 = await fileToBase64(file);
+      setPdfData(base64);
+      localStorage.setItem(STORAGE_KEY, base64);
       reset();
     }
+  };
+
+  const clearSyllabus = () => {
+    setPdfData(null);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
@@ -44,6 +58,16 @@ export function SyllabusPage() {
               <Button type="submit" className="w-auto">
                 Upload
               </Button>
+              {pdfData && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={clearSyllabus}
+                  className="w-auto"
+                >
+                  Clear
+                </Button>
+              )}
             </form>
           ) : (
             <p className="text-sm text-gray-500 mb-6">
@@ -52,15 +76,15 @@ export function SyllabusPage() {
             </p>
           )}
 
-          {pdfUrl ? (
+          {pdfData ? (
             <div className="space-y-4">
               <iframe
-                src={pdfUrl}
+                src={pdfData}
                 title="Syllabus Preview"
                 className="w-full h-[calc(100vh-250px)] border rounded"
               />
               <a
-                href={pdfUrl}
+                href={pdfData}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-green-600 hover:underline text-sm font-medium"

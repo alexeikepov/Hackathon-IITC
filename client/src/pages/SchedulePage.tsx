@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,9 @@ type Slot = {
   className: string;
 };
 
-const STORAGE_KEY = "weekly_schedule_slots";
+const LOCAL_STORAGE_KEY = "schedule_slots";
+const HOURS_STORAGE_KEY = "schedule_hours";
+
 const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
 
 function addOneHourRange(lastHour: string) {
@@ -45,38 +47,39 @@ function getSundayOfWeek(date: Date) {
 export function SchedulePage() {
   const { isAuth } = useAuth();
   const { register, handleSubmit, reset, setValue } = useForm<Slot>();
-  const [slots, setSlots] = useState<Slot[]>([]);
+
+  const [slots, setSlots] = useState<Slot[]>(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [hours, setHours] = useState<string[]>(() => {
+    const saved = localStorage.getItem(HOURS_STORAGE_KEY);
+    return saved
+      ? JSON.parse(saved)
+      : [
+          "08:00 - 09:00",
+          "09:00 - 10:00",
+          "10:00 - 11:00",
+          "11:00 - 12:00",
+          "12:00 - 13:00",
+          "13:00 - 14:00",
+        ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(slots));
+  }, [slots]);
+
+  useEffect(() => {
+    localStorage.setItem(HOURS_STORAGE_KEY, JSON.stringify(hours));
+  }, [hours]);
+
   const [editingSlot, setEditingSlot] = useState<{
     day: string;
     hour: string;
   } | null>(null);
-  const [hours, setHours] = useState<string[]>([
-    "08:00 - 09:00",
-    "09:00 - 10:00",
-    "10:00 - 11:00",
-    "11:00 - 12:00",
-    "12:00 - 13:00",
-    "13:00 - 14:00",
-  ]);
   const [baseDate, setBaseDate] = useState<Date>(new Date());
-
-  // Load from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed: Slot[] = JSON.parse(saved);
-        setSlots(parsed);
-      } catch (err) {
-        console.error("Failed to parse schedule from localStorage", err);
-      }
-    }
-  }, []);
-
-  // Save to localStorage every time slots change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(slots));
-  }, [slots]);
 
   const sunday = getSundayOfWeek(baseDate);
   const datesForDays = weekDays.map((_, i) => {
@@ -146,26 +149,29 @@ export function SchedulePage() {
 
   const clearSchedule = () => {
     setSlots([]);
-    localStorage.removeItem(STORAGE_KEY);
+    setHours([
+      "08:00 - 09:00",
+      "09:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "12:00 - 13:00",
+      "13:00 - 14:00",
+    ]);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(HOURS_STORAGE_KEY);
   };
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       <Card>
         <CardHeader className="flex items-center justify-between">
           <CardTitle>Weekly Schedule</CardTitle>
-          <div className="flex items-center gap-4">
-            <input
-              type="date"
-              onChange={onBaseDateChange}
-              className="border rounded px-3 py-1"
-              value={baseDate.toISOString().slice(0, 10)}
-            />
-            {isAuth && (
-              <Button variant="destructive" onClick={clearSchedule}>
-                Clear Schedule
-              </Button>
-            )}
-          </div>
+          <input
+            type="date"
+            onChange={onBaseDateChange}
+            className="border rounded px-3 py-1"
+            value={baseDate.toISOString().slice(0, 10)}
+          />
         </CardHeader>
         <CardContent>
           {isAuth && (
@@ -174,7 +180,7 @@ export function SchedulePage() {
               className="grid grid-cols-6 gap-4 mb-6"
             >
               <select
-                {...register("day", { required: true })}
+                {...register("day")}
                 className="border rounded px-2 py-1"
                 disabled={!!editingSlot}
               >
@@ -185,9 +191,8 @@ export function SchedulePage() {
                   </option>
                 ))}
               </select>
-
               <select
-                {...register("hour", { required: true })}
+                {...register("hour")}
                 className="border rounded px-2 py-1"
                 disabled={!!editingSlot}
               >
@@ -198,19 +203,9 @@ export function SchedulePage() {
                   </option>
                 ))}
               </select>
-
-              <Input
-                placeholder="Subject"
-                {...register("subject", { required: true })}
-              />
-              <Input
-                placeholder="Teacher"
-                {...register("teacher", { required: true })}
-              />
-              <Input
-                placeholder="Class"
-                {...register("className", { required: true })}
-              />
+              <Input {...register("subject")} placeholder="Subject" />
+              <Input {...register("teacher")} placeholder="Teacher" />
+              <Input {...register("className")} placeholder="Class" />
               <div className="flex gap-2">
                 <Button type="submit" className="flex-1">
                   {editingSlot ? "Update" : "Add"}
@@ -233,8 +228,8 @@ export function SchedulePage() {
           )}
 
           <div className="overflow-x-auto">
-            <table className="w-full border  text-sm table-fixed cursor-pointer">
-              <thead className="">
+            <table className="w-full border text-sm table-fixed cursor-pointer">
+              <thead>
                 <tr>
                   <th className="border px-2 py-1 w-40">Hour / Day</th>
                   {weekDays.map((day, i) => (
@@ -251,7 +246,7 @@ export function SchedulePage() {
               </thead>
               <tbody>
                 {hours.map((hour, index) => (
-                  <tr key={hour} className="">
+                  <tr key={hour}>
                     <td className="border px-2 py-1 font-medium flex items-center gap-2">
                       {isAuth ? (
                         <input
@@ -268,7 +263,6 @@ export function SchedulePage() {
                           type="button"
                           onClick={() => removeHour(index)}
                           className="text-red-600 font-bold px-2 hover:text-red-800"
-                          aria-label={`Remove hour ${hour}`}
                         >
                           -
                         </button>
@@ -319,7 +313,6 @@ export function SchedulePage() {
                         type="button"
                         onClick={addHour}
                         className="text-green-600 font-bold px-3 py-1 hover:text-green-800"
-                        aria-label="Add new hour"
                       >
                         +
                       </button>
@@ -330,6 +323,14 @@ export function SchedulePage() {
               </tbody>
             </table>
           </div>
+
+          {isAuth && (
+            <div className="mt-4 flex justify-end">
+              <Button variant="destructive" onClick={clearSchedule}>
+                Clear Schedule
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
