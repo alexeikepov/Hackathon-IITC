@@ -7,6 +7,10 @@ import {
 } from "../../utils/globalTypes.util.js";
 import { ICourse } from "../courses/course.types.js";
 
+import mongoose from "mongoose";
+import { UserModel } from "./user.model.js";
+import { CourseModel } from "../courses/course.model.js";
+
 const getAllUsers = async (
   _req: Request,
   res: Response<ResponseUser[]>,
@@ -74,7 +78,6 @@ const deleteUser = async (
   }
 };
 
-
 const getAllCourses = async (
   req: AuthenticatedRequest,
   res: Response<ICourse[]>,
@@ -87,19 +90,46 @@ const getAllCourses = async (
     return next(err);
   }
 };
-const getCoursesByUserId = async (req: AuthenticatedRequest, res: Response,
-  next: NextFunction
 
+const getCoursesByUserId = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const userId = req.params.id;
-
-    const courses = await userService.getCoursesByUserId(userId)
+    const courses = await userService.getCoursesByUserId(userId);
     res.status(200).json({ courses });
   } catch (err) {
     return next(err);
   }
 };
+
+const assignCourseToUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.params;
+    const { courseId } = req.body;
+
+    const user = await UserModel.findById(userId).lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    await UserModel.updateOne(
+      { _id: userId },
+      { $addToSet: { courses: new mongoose.Types.ObjectId(courseId) } }
+    );
+
+    await CourseModel.findByIdAndUpdate(courseId, { teacher: userId });
+
+    return res.status(200).json({ message: "Course assigned successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const userController = {
   getCoursesByUserId,
   getAllUsers,
@@ -108,4 +138,5 @@ export const userController = {
   patchUser,
   deleteUser,
   getAllCourses,
+  assignCourseToUser,
 };

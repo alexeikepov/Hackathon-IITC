@@ -1,27 +1,27 @@
-export async function getAllCourses() {
-  const res = await fetch("http://localhost:3001/api/courses", {
-    credentials: "include",
+import axios from "axios";
+
+export const getAllCourses = async () => {
+  const response = await axios.get("http://localhost:3001/api/courses", {
+    withCredentials: true,
   });
+  return response.data;
+};
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch courses");
-  }
+export const getTeacherCourses = async (teacherId: string) => {
+  const response = await axios.get(
+    `http://localhost:3001/api/courses?teacher=${teacherId}`,
+    { withCredentials: true }
+  );
+  return response.data;
+};
 
-  return res.json();
-}
-
-export async function unassignCourse(courseId: string) {
-  const res = await fetch(
+export const unassignCourse = async (courseId: string) => {
+  const response = await axios.patch(
     `http://localhost:3001/api/courses/${courseId}/unassign`,
+    {},
     {
-      method: "PATCH",
-      credentials: "include",
+      withCredentials: true,
     }
   );
-
-  if (!res.ok) {
-    throw new Error("Failed to unassign course");
-  }
-
-  return res.json();
-}
+  return response.data;
+};

@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllCourses } from "@/services/course.service";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 type Course = {
   _id: string;
@@ -9,14 +10,25 @@ type Course = {
   description: string;
 };
 
+const getUserCourses = async (userId: string) => {
+  const res = await axios.get(
+    `http://localhost:3001/api/users/${userId}/courses`,
+    { withCredentials: true }
+  );
+  return res.data.courses;
+};
+
 export function CoursesPage() {
+  const { user } = useAuth();
+
   const {
     data: courses,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["courses"],
-    queryFn: getAllCourses,
+    queryKey: ["user-courses", user?._id],
+    queryFn: () => getUserCourses(user!._id),
+    enabled: !!user?._id,
   });
 
   if (isLoading) return <p className="text-center">Loading courses...</p>;

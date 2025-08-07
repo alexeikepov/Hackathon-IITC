@@ -19,6 +19,7 @@ type Course = {
   title: string;
   description: string;
   teacher?: string;
+  students: string[];
 };
 
 export function DashboardPage() {
@@ -44,14 +45,23 @@ export function DashboardPage() {
   const handleAssign = async (courseId: string) => {
     try {
       await axios.patch(
-        `http://localhost:3001/api/courses/${courseId}`,
-        { teacherId: user?._id },
+        `http://localhost:3001/api/users/${user?._id}/courses`,
+        {
+          courseId,
+          studentId: user?._id,
+        },
         { withCredentials: true }
       );
 
       setCourses((prev) =>
         prev.map((course) =>
-          course._id === courseId ? { ...course, teacher: user?._id } : course
+          course._id === courseId
+            ? {
+                ...course,
+                teacher: user?._id,
+                students: [...new Set([...course.students, user!._id])],
+              }
+            : course
         )
       );
     } catch (err) {
