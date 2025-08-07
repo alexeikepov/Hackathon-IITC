@@ -20,8 +20,8 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 flex flex-col py-2 transition-width duration-300 ease-in-out overflow-hidden
-        ${isOpen ? "w-60 px-6" : "w-0 px-0"}`}
+      className={`fixed top-0 left-0 h-screen backdrop-blur-md bg-white/70 dark:bg-black/30 flex flex-col py-2 transition-width duration-300 ease-in-out overflow-hidden
+        ${isOpen ? "w-50 px-6" : "w-0 px-0"}`}
       style={{ zIndex: 100 }}
     >
       <nav
@@ -29,9 +29,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
-        <ul className="flex flex-col gap-1 whitespace-nowrap mt-12">
-          {" "}
-          {/* add margin top so links don’t overlap toggle */}
+        <ul className="flex flex-col gap-1 whitespace-nowrap mt-16">
           {navItems.map(({ label, path }) => (
             <li key={path}>
               <NavLink
@@ -51,9 +49,8 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
         </ul>
       </nav>
 
-      <div className="mt-auto pt-6">
-        <p className="text-sm ml-15 text-gray-500 dark:text-gray-400 mb-2">
-
+      <div className="mt-auto pt-6 pb-4">
+        <p className="text-sm text-center text-gray-500 dark:text-gray-400 mb-2">
           {user?.name}
         </p>
         <button
