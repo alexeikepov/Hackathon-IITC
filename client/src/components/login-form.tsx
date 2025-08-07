@@ -65,8 +65,7 @@ export function LoginForm({
       onSubmit={handleSubmit(onSubmit)}
       className={cn(
         "flex flex-col relative z-10 w-full max-w-[600px]/70 backdrop-blur-md p-6 sm:p-8 rounded-xl gap-5",
-        className,
-
+        className
       )}
       {...props}
     >
@@ -132,16 +131,6 @@ export function LoginForm({
           )}
         </Button>
       </div>
-
-      <p className="text-center text-sm">
-        Don't have an account?{" "}
-        <a
-          href="/register"
-          className="underline underline-offset-4 text-green-700 dark:text-green-400 font-bold"
-        >
-          Register
-        </a>
-      </p>
     </form>
   );
 }
