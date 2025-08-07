@@ -4,8 +4,32 @@ import {
   CreateUserInput,
   PatchUserInput,
   UpdateUserInput,
+  UserRole,
 } from "./user.types.js";
 import { CourseModel } from "../courses/course.model.js";
+import mongoose from "mongoose";
+
+
+const getCoursesByUserId = async (userId: string) => {
+
+  const objectId = new mongoose.Types.ObjectId(userId);
+  const user = await UserModel.findById(objectId);
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+  console.log(user)
+  console.log(user.role);
+  let courses;
+  if (user.role === UserRole.TEACHER) {
+    courses = await CourseModel.find({ teacher: objectId });
+  } else {
+    courses = await CourseModel.find({ students: objectId });
+    console.log(courses);
+
+  }
+
+  return courses;
+}
 
 const getAllUsers = () => {
   return UserModel.find()
@@ -13,8 +37,12 @@ const getAllUsers = () => {
 };
 
 const getUserById = async (id: string) => {
-  const user = await UserModel.findById(id)
+
+  const objectId = new mongoose.Types.ObjectId(id);
+  const user = await UserModel.findById(objectId)
     .select("-password -__v")
+
+
   if (!user) {
     throw new AppError(`User with ID: ${id} not found.`, 404);
   }
@@ -80,6 +108,7 @@ const getAllCourses = (id: string) => {
 };
 
 export const userService = {
+  getCoursesByUserId,
   getAllUsers,
   getUserById,
   getUserByEmail,

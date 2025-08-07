@@ -1,20 +1,20 @@
 import { Schema, model } from "mongoose";
-import { UserDocument, IUserModel } from "./user.types.js";
+import { UserDocument, IUserModel, UserRole } from "./user.types.js";
 import { authService } from "../auth/auth.service.js";
 // models/User.ts
 import mongoose from "mongoose";
-
 const userSchema = new Schema<UserDocument, IUserModel>(
   {
     name: String,
     email: { type: String, unique: true },
     password: String,
-    role: { type: String, enum: ["student", "admin", "teacher"], default: "student" },
+    role: { type: String, enum: UserRole, default: UserRole.STUDENT },
     phone: String,
     location: String,
     militaryUnit: String,
     ID: String,
     joinedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    taughtCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }]
   }, {
   timestamps: true,
   toObject: { virtuals: true },
