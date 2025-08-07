@@ -126,7 +126,7 @@ export function DashboardPage() {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
-                    variant="destructive"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setCourseToDelete(course)}
                   >
@@ -134,21 +134,30 @@ export function DashboardPage() {
                   </Button>
                 </AlertDialogTrigger>
 
-                <AlertDialogContent>
+                <AlertDialogContent className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-gray-100">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>
+                    <AlertDialogTitle className="text-xl font-bold">
                       Are you sure you want to delete this course?
                     </AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-300">
                       This action cannot be undone. It will permanently remove{" "}
-                      <strong>{courseToDelete?.title}</strong>.
+                      <strong className="font-semibold text-red-600 dark:text-red-400">
+                        {courseToDelete?.title}
+                      </strong>
+                      .
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setCourseToDelete(null)}>
+                    <AlertDialogCancel
+                      onClick={() => setCourseToDelete(null)}
+                      className="bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:text-gray-100"
+                    >
                       Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirmDelete}>
+                    <AlertDialogAction
+                      onClick={handleConfirmDelete}
+                      className="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white"
+                    >
                       Yes, delete it
                     </AlertDialogAction>
                   </AlertDialogFooter>
