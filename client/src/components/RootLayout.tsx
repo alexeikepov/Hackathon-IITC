@@ -35,7 +35,6 @@ export function RootLayout() {
         </div>
       </header>
 
-      {/* Content */}
       <div
         className="flex flex-1 transition-margin duration-300 ease-in-out"
         style={{ marginLeft: isSidebarOpen ? 240 : 0 }}

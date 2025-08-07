@@ -57,7 +57,6 @@ export function WelcomeUser({ onLogout }: { onLogout: () => void }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
 
-      {/* Hidden input for file upload */}
       <input
         type="file"
         accept="image/*"

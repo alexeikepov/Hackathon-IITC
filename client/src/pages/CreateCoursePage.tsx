@@ -163,7 +163,7 @@ export function CreateCoursePage() {
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
+          <div className="flex flex-col gap-2">
             <Label>Title</Label>
             <Input {...register("title")} placeholder="Course title" />
             {errors.title && (
@@ -171,7 +171,7 @@ export function CreateCoursePage() {
             )}
           </div>
 
-          <div>
+          <div className="flex flex-col gap-2">
             <Label>Description</Label>
             <Textarea
               {...register("description")}
@@ -184,7 +184,7 @@ export function CreateCoursePage() {
             )}
           </div>
 
-          <div>
+          <div className="flex flex-col gap-2">
             <Label>Syllabus Link</Label>
             <Input {...register("syllabusLink")} placeholder="https://..." />
             {errors.syllabusLink && (
@@ -213,18 +213,18 @@ export function CreateCoursePage() {
                     <SortableScheduleItem key={field.id} id={field.id}>
                       <div className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Day</Label>
                             <Input {...register(`schedule.${index}.day`)} />
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Start</Label>
                             <Input
                               type="time"
                               {...register(`schedule.${index}.startHour`)}
                             />
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>End</Label>
                             <Input
                               type="time"
@@ -236,13 +236,13 @@ export function CreateCoursePage() {
                               </p>
                             )}
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Location</Label>
                             <Input
                               {...register(`schedule.${index}.location.name`)}
                             />
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Lat</Label>
                             <Input
                               type="number"
@@ -250,7 +250,7 @@ export function CreateCoursePage() {
                               {...register(`schedule.${index}.location.lat`)}
                             />
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Lng</Label>
                             <Input
                               type="number"
@@ -258,7 +258,7 @@ export function CreateCoursePage() {
                               {...register(`schedule.${index}.location.lng`)}
                             />
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <Label>Radius</Label>
                             <Input
                               type="number"
@@ -324,9 +324,11 @@ export function CreateCoursePage() {
       </div>
 
       <AlertDialog open={showSuccess}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-gray-100">
           <AlertDialogHeader>
-            <AlertDialogTitle>Course created successfully!</AlertDialogTitle>
+            <AlertDialogTitle className="text-lg font-semibold">
+              Course created successfully!
+            </AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
@@ -334,6 +336,7 @@ export function CreateCoursePage() {
                 setShowSuccess(false);
                 navigate("/");
               }}
+              className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white"
             >
               Go to Dashboard
             </AlertDialogAction>
