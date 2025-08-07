@@ -1,5 +1,5 @@
 import { Footer } from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { ModeToggle } from "./ModeToggle";
 import { WelcomeUser } from "./WelcomeUser";
@@ -12,18 +12,16 @@ export function RootLayout() {
 
   const onLogout = async () => {
     await logout();
-    // Optional navigation/cleanup here
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-100">
-      {/* Toggle button fixed top-left */}
-
-      {/* Header */}
       <header className="flex justify-between items-center p-4 border-b border-border">
-        <h1 className="text-3xl font-bold ml-12 text-amber-500 tracking-tight select-none leading-none">
-          LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
-        </h1>
+        <Link to="/">
+          <h1 className="text-3xl font-bold ml-12 text-amber-500 tracking-tight select-none leading-none hover:underline">
+            LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
+          </h1>
+        </Link>
         <button
           aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}

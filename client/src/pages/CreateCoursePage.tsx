@@ -22,6 +22,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useState } from "react";
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const scheduleItem = z
   .object({
@@ -79,6 +89,7 @@ function SortableScheduleItem({
 
 export function CreateCoursePage() {
   const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const {
     register,
@@ -128,8 +139,7 @@ export function CreateCoursePage() {
       return res.json();
     },
     onSuccess: () => {
-      alert("Course created!");
-      navigate("/courses");
+      setShowSuccess(true);
     },
   });
 
@@ -146,168 +156,190 @@ export function CreateCoursePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-border my-10">
-      <h1 className="text-3xl font-bold text-center text-green-700 dark:text-green-400">
-        Create New Course
-      </h1>
+    <>
+      <div className="max-w-4xl mx-auto p-8 space-y-8 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-border my-10">
+        <h1 className="text-3xl font-bold text-center text-green-700 dark:text-green-400">
+          Create New Course
+        </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <Label>Title</Label>
-          <Input {...register("title")} placeholder="Course title" />
-          {errors.title && (
-            <p className="text-sm text-red-500">{errors.title.message}</p>
-          )}
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <Label>Title</Label>
+            <Input {...register("title")} placeholder="Course title" />
+            {errors.title && (
+              <p className="text-sm text-red-500">{errors.title.message}</p>
+            )}
+          </div>
 
-        <div>
-          <Label>Description</Label>
-          <Textarea
-            {...register("description")}
-            placeholder="About course..."
-          />
-          {errors.description && (
-            <p className="text-sm text-red-500">{errors.description.message}</p>
-          )}
-        </div>
+          <div>
+            <Label>Description</Label>
+            <Textarea
+              {...register("description")}
+              placeholder="About course..."
+            />
+            {errors.description && (
+              <p className="text-sm text-red-500">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
 
-        <div>
-          <Label>Syllabus Link</Label>
-          <Input {...register("syllabusLink")} placeholder="https://..." />
-          {errors.syllabusLink && (
-            <p className="text-sm text-red-500">
-              {errors.syllabusLink.message}
-            </p>
-          )}
-        </div>
+          <div>
+            <Label>Syllabus Link</Label>
+            <Input {...register("syllabusLink")} placeholder="https://..." />
+            {errors.syllabusLink && (
+              <p className="text-sm text-red-500">
+                {errors.syllabusLink.message}
+              </p>
+            )}
+          </div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-            Schedule
-          </h3>
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+              Schedule
+            </h3>
 
-          <DndContext
-            collisionDetection={closestCenter}
-            sensors={sensors}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={fields.map((f) => f.id)}
-              strategy={verticalListSortingStrategy}
+            <DndContext
+              collisionDetection={closestCenter}
+              sensors={sensors}
+              onDragEnd={handleDragEnd}
             >
-              <div className="space-y-6">
-                {fields.map((field, index) => (
-                  <SortableScheduleItem key={field.id} id={field.id}>
-                    <div className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>Day</Label>
-                          <Input {...register(`schedule.${index}.day`)} />
-                        </div>
-                        <div>
-                          <Label>Start</Label>
-                          <Input
-                            type="time"
-                            {...register(`schedule.${index}.startHour`)}
-                          />
-                        </div>
-                        <div>
-                          <Label>End</Label>
-                          <Input
-                            type="time"
-                            {...register(`schedule.${index}.endHour`)}
-                          />
-                          {errors.schedule?.[index]?.endHour && (
-                            <p className="text-sm text-red-500">
-                              {errors.schedule[index]?.endHour?.message}
-                            </p>
-                          )}
-                        </div>
-                        <div>
-                          <Label>Location</Label>
-                          <Input
-                            {...register(`schedule.${index}.location.name`)}
-                          />
-                        </div>
-                        <div>
-                          <Label>Lat</Label>
-                          <Input
-                            type="number"
-                            step="any"
-                            {...register(`schedule.${index}.location.lat`)}
-                          />
-                        </div>
-                        <div>
-                          <Label>Lng</Label>
-                          <Input
-                            type="number"
-                            step="any"
-                            {...register(`schedule.${index}.location.lng`)}
-                          />
-                        </div>
-                        <div>
-                          <Label>Radius</Label>
-                          <Input
-                            type="number"
-                            {...register(
-                              `schedule.${index}.location.radiusMeters`
+              <SortableContext
+                items={fields.map((f) => f.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-6">
+                  {fields.map((field, index) => (
+                    <SortableScheduleItem key={field.id} id={field.id}>
+                      <div className="border border-muted rounded-lg p-4 bg-muted/30 dark:bg-muted/10 space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                          <div>
+                            <Label>Day</Label>
+                            <Input {...register(`schedule.${index}.day`)} />
+                          </div>
+                          <div>
+                            <Label>Start</Label>
+                            <Input
+                              type="time"
+                              {...register(`schedule.${index}.startHour`)}
+                            />
+                          </div>
+                          <div>
+                            <Label>End</Label>
+                            <Input
+                              type="time"
+                              {...register(`schedule.${index}.endHour`)}
+                            />
+                            {errors.schedule?.[index]?.endHour && (
+                              <p className="text-sm text-red-500">
+                                {errors.schedule[index]?.endHour?.message}
+                              </p>
                             )}
-                          />
+                          </div>
+                          <div>
+                            <Label>Location</Label>
+                            <Input
+                              {...register(`schedule.${index}.location.name`)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Lat</Label>
+                            <Input
+                              type="number"
+                              step="any"
+                              {...register(`schedule.${index}.location.lat`)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Lng</Label>
+                            <Input
+                              type="number"
+                              step="any"
+                              {...register(`schedule.${index}.location.lng`)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Radius</Label>
+                            <Input
+                              type="number"
+                              {...register(
+                                `schedule.${index}.location.radiusMeters`
+                              )}
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        onClick={() => remove(index)}
-                      >
-                        Remove Schedule
-                      </Button>
-                    </div>
-                  </SortableScheduleItem>
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => remove(index)}
+                        >
+                          Remove Schedule
+                        </Button>
+                      </div>
+                    </SortableScheduleItem>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-6"
+              onClick={() =>
+                append({
+                  day: "",
+                  startHour: "",
+                  endHour: "",
+                  location: {
+                    name: "",
+                    lat: "",
+                    lng: "",
+                    radiusMeters: "",
+                  },
+                })
+              }
+            >
+              <PlusCircle className="w-4 h-4 mr-2" />
+              Add Schedule
+            </Button>
+          </div>
 
           <Button
-            type="button"
-            variant="outline"
-            className="mt-6"
-            onClick={() =>
-              append({
-                day: "",
-                startHour: "",
-                endHour: "",
-                location: {
-                  name: "",
-                  lat: "",
-                  lng: "",
-                  radiusMeters: "",
-                },
-              })
-            }
+            type="submit"
+            className="w-full mt-6 text-lg"
+            disabled={mutation.isPending}
           >
-            <PlusCircle className="w-4 h-4 mr-2" />
-            Add Schedule
+            {mutation.isPending ? (
+              <>
+                <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                Creating...
+              </>
+            ) : (
+              "Create Course"
+            )}
           </Button>
-        </div>
+        </form>
+      </div>
 
-        <Button
-          type="submit"
-          className="w-full mt-6 text-lg"
-          disabled={mutation.isPending}
-        >
-          {mutation.isPending ? (
-            <>
-              <Loader2 className="animate-spin w-4 h-4 mr-2" />
-              Creating...
-            </>
-          ) : (
-            "Create Course"
-          )}
-        </Button>
-      </form>
-    </div>
+      <AlertDialog open={showSuccess}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Course created successfully!</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setShowSuccess(false);
+                navigate("/");
+              }}
+            >
+              Go to Dashboard
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

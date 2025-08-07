@@ -2,6 +2,17 @@ import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 type Course = {
   _id: string;
@@ -13,6 +24,7 @@ type Course = {
 export function DashboardPage() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
+  const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
 
   useEffect(() => {
     async function fetchCourses() {
@@ -47,6 +59,22 @@ export function DashboardPage() {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (!courseToDelete) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:3001/api/courses/${courseToDelete._id}`,
+        { withCredentials: true }
+      );
+
+      setCourses((prev) => prev.filter((c) => c._id !== courseToDelete._id));
+      setCourseToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete course", err);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-green-700 dark:text-green-400">
@@ -61,27 +89,62 @@ export function DashboardPage() {
         {courses.map((course) => (
           <div
             key={course._id}
-            className="p-4 bg-white dark:bg-slate-800 rounded-xl shadow-md"
+            className="p-4 bg-white dark:bg-slate-800 rounded-xl shadow-md flex flex-col justify-between min-h-[220px]"
           >
-            <h2 className="text-xl font-semibold text-amber-500">
-              {course.title}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {course.description}
-            </p>
+            <div className="flex-1 space-y-2">
+              <h2 className="text-xl font-semibold text-amber-500">
+                {course.title}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                {course.description}
+              </p>
+            </div>
 
-            {course.teacher === user?._id ? (
-              <p className="text-green-600 mt-2">✔ You are the teacher</p>
-            ) : (
-              <Button
-                onClick={() => handleAssign(course._id)}
-                variant="outline"
-                size="sm"
-                className="mt-4"
-              >
-                Assign to me
-              </Button>
-            )}
+            <div className="mt-auto flex justify-between items-center pt-4">
+              {course.teacher === user?._id ? (
+                <p className="text-green-600">✔ You are the teacher</p>
+              ) : (
+                <Button
+                  onClick={() => handleAssign(course._id)}
+                  variant="outline"
+                  size="sm"
+                >
+                  Assign to me
+                </Button>
+              )}
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setCourseToDelete(course)}
+                  >
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to delete this course?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. It will permanently remove{" "}
+                      <strong>{courseToDelete?.title}</strong>.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setCourseToDelete(null)}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction onClick={handleConfirmDelete}>
+                      Yes, delete it
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
         ))}
       </div>
