@@ -6,12 +6,16 @@ import { userValidationSchema } from "./user.schema.js";
 import { globalValidationSchemas } from "../../validationSchemas.ts/globalValidation.schema.js";
 
 const router = Router();
+// Protected
+router.use(authMiddleware.authenticate)
 
 router.get("/", userController.getAllUsers);
 
+router.get("/:id/courses",
+  userController.getCoursesByUserId);
+
 router.get(
   "/courses",
-  authMiddleware.authenticate,
   userController.getAllCourses
 );
 
@@ -23,14 +27,12 @@ router.get(
 
 router.put(
   "/",
-  authMiddleware.authenticate,
   validate(userValidationSchema.updateUserSchema),
   userController.updateUser
 );
 
 router.patch(
   "/",
-  authMiddleware.authenticate,
   validate(userValidationSchema.patchUserSchema),
   userController.patchUser
 );
