@@ -1,6 +1,7 @@
 import { CourseModel } from "./course.model.js";
 import { AppError } from "../../utils/appError.util.js";
 import { CreateCourseInput, PatchCourseInput } from "./course.types.js";
+import mongoose from "mongoose";
 
 const populateOptions = [
   { path: "teacher", select: "-__v -password" },
@@ -40,6 +41,7 @@ const createCourse = async (
 };
 
 const updateCourse = async (id: string, courseData: CreateCourseInput) => {
+  console.log("update course")
   const updatedCourse = await CourseModel.findByIdAndUpdate(id, courseData, {
     runValidators: true,
     new: true,
@@ -55,7 +57,9 @@ const updateCourse = async (id: string, courseData: CreateCourseInput) => {
 };
 
 const patchCourse = async (id: string, courseData: PatchCourseInput) => {
-  const updatedCourse = await CourseModel.findByIdAndUpdate(id, courseData, {
+    const objectId = new mongoose.Types.ObjectId(id);
+  console.log(objectId);
+  const updatedCourse = await CourseModel.findByIdAndUpdate(objectId, courseData, {
     runValidators: true,
     new: true,
   })

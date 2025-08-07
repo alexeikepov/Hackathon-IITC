@@ -9,13 +9,15 @@ const router = Router();
 
 // Protected
 router.use(authMiddleware.authenticate);
+
 router.get("/", courseController.getAllCourses);
+
 router.get(
   "/:id",
   validate(globalValidationSchemas.getByIdSchema),
   courseController.getCourseById
 );
-
+console.log("hello from course")
 
 router.post(
   "/",
