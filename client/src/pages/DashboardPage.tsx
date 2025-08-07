@@ -29,24 +29,31 @@ export function DashboardPage() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const res = await axios.get("http://localhost:3001/api/courses", {
-          withCredentials: true,
-        });
+        const res = await axios.patch(
+          `http://localhost:3001/api/users/${user?._id}/courses`,
+          {
+            withCredentials: true,
+          }
+        );
         setCourses(res.data);
       } catch (err) {
-        console.error("Failed to fetch courses", err);
+        console.error("Failed to fetch user courses", err);
       }
     }
 
-    fetchCourses();
-  }, []);
+    if (user?._id) {
+      fetchCourses();
+    }
+  }, [user?._id]);
 
   const handleAssign = async (courseId: string) => {
     try {
       await axios.patch(
-        `http://localhost:3001/api/courses/${courseId}`,
-        { teacherId: user?._id },
-        { withCredentials: true }
+        `http://localhost:3001/api/users/${user?._id}/courses/${courseId}`,
+        {},
+        {
+          withCredentials: true,
+        }
       );
 
       setCourses((prev) =>
@@ -55,7 +62,7 @@ export function DashboardPage() {
         )
       );
     } catch (err) {
-      console.error("Failed to assign course", err);
+      console.error("Failed to assign course to user", err);
     }
   };
 
@@ -82,7 +89,7 @@ export function DashboardPage() {
       </h1>
 
       <div className="text-lg text-gray-700 dark:text-gray-300">
-        Total <strong>{courses.length}</strong> courses available.
+        Total <strong>{courses.length}</strong> courses assigned to you.
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -2,14 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCourses } from "@/services/course.service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 type Course = {
   _id: string;
   title: string;
   description: string;
+  teacher?: string;
 };
 
 export function CoursesPage() {
+  const { user } = useAuth();
+
   const {
     data: courses,
     isLoading,
@@ -23,9 +27,13 @@ export function CoursesPage() {
   if (error)
     return <p className="text-center text-red-500">Error loading courses</p>;
 
+  const teacherCourses = courses?.filter(
+    (course: Course) => course.teacher === user?._id
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {courses?.map((course: Course) => (
+      {teacherCourses?.map((course: Course) => (
         <Link key={course._id} to={`/courses/${course._id}`}>
           <Card className="h-full min-h-[180px] flex flex-col justify-between bg-white dark:bg-slate-900 border border-border hover:shadow-xl hover:border-green-500 transition-all cursor-pointer">
             <CardHeader>
