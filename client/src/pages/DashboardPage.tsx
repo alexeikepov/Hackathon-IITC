@@ -31,7 +31,7 @@ export function DashboardPage() {
 
   const handleAssign = async (courseId: string) => {
     try {
-      const res = await axios.patch(
+      await axios.patch(
         `http://localhost:3001/api/courses/${courseId}`,
         { teacherId: user?._id },
         { withCredentials: true }
