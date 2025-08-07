@@ -19,6 +19,7 @@ type Course = {
   title: string;
   description: string;
   teacher?: string;
+  students: string[];
 };
 
 export function DashboardPage() {
@@ -29,40 +30,42 @@ export function DashboardPage() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const res = await axios.patch(
-          `http://localhost:3001/api/users/${user?._id}/courses`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get("http://localhost:3001/api/courses", {
+          withCredentials: true,
+        });
         setCourses(res.data);
       } catch (err) {
-        console.error("Failed to fetch user courses", err);
+        console.error("Failed to fetch courses", err);
       }
     }
 
-    if (user?._id) {
-      fetchCourses();
-    }
-  }, [user?._id]);
+    fetchCourses();
+  }, []);
 
   const handleAssign = async (courseId: string) => {
     try {
       await axios.patch(
-        `http://localhost:3001/api/users/${user?._id}/courses/${courseId}`,
-        {},
+        `http://localhost:3001/api/users/${user?._id}/courses`,
         {
-          withCredentials: true,
-        }
+          courseId,
+          studentId: user?._id,
+        },
+        { withCredentials: true }
       );
 
       setCourses((prev) =>
         prev.map((course) =>
-          course._id === courseId ? { ...course, teacher: user?._id } : course
+          course._id === courseId
+            ? {
+                ...course,
+                teacher: user?._id,
+                students: [...new Set([...course.students, user!._id])],
+              }
+            : course
         )
       );
     } catch (err) {
-      console.error("Failed to assign course to user", err);
+      console.error("Failed to assign course", err);
     }
   };
 
@@ -89,7 +92,7 @@ export function DashboardPage() {
       </h1>
 
       <div className="text-lg text-gray-700 dark:text-gray-300">
-        Total <strong>{courses.length}</strong> courses assigned to you.
+        Total <strong>{courses.length}</strong> courses available.
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
