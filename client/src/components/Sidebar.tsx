@@ -52,7 +52,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
       </nav>
 
       <div className="mt-auto pt-6">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        <p className="text-sm ml-15 text-gray-500 dark:text-gray-400 mb-2">
           {user?.name}
         </p>
         <button
