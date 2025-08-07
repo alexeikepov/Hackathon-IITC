@@ -1,14 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { ModeToggle } from "@/components/ModeToggle";
-import { useState, useRef } from "react";
 
-export function Sidebar() {
+export function Sidebar({ isOpen }: { isOpen: boolean }) {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
-
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
     { label: "Dashboard", path: "/" },
@@ -24,65 +19,45 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="relative w-64 h-screen bg-gradient-to-b from-white to-gray-100 dark:from-slate-900 dark:to-slate-800 border-r border-border flex flex-col p-6">
-      {/* Header */}
-      <div
-        className="flex items-center justify-between mb-4 relative"
-        ref={containerRef}
+    <aside
+      className={`fixed top-0 left-0 h-screen bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 flex flex-col py-2 transition-width duration-300 ease-in-out overflow-hidden
+        ${isOpen ? "w-60 px-6" : "w-0 px-0"}`}
+      style={{ zIndex: 100 }}
+    >
+      <nav
+        className={`flex-1 transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
       >
-        <h1 className="text-3xl font-bold text-amber-500 tracking-tight select-none">
-          LMS<span className="text-gray-800 dark:text-gray-300">-HUB</span>
-        </h1>
-
-        <div className="flex items-center gap-2">
-          <ModeToggle />
-          <button
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            onClick={() => setIsOpen(!isOpen)}
-            className="px-2 py-1 rounded border border-border text-gray-700 dark:text-gray-300 hover:bg-muted dark:hover:bg-muted/30 transition select-none"
-          >
-            {isOpen ? "×" : "»"}
-          </button>
-        </div>
-
-        {/* Nav sliding horizontally below the button */}
-        <nav
-          className={`absolute top-full left-0 mt-2 flex gap-3 bg-white dark:bg-slate-800 border border-border rounded-md shadow-md p-3 z-50
-            origin-left transform transition-transform duration-300 ease-out
-            ${isOpen ? "scale-x-100" : "scale-x-0"}`}
-          style={{
-            transformOrigin: "left",
-            whiteSpace: "nowrap",
-            height: "3rem",
-          }}
-        >
+        <ul className="flex flex-col gap-1 whitespace-nowrap mt-12">
+          {" "}
+          {/* add margin top so links don’t overlap toggle */}
           {navItems.map(({ label, path }) => (
-            <NavLink
-              key={path}
-              to={path}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-muted dark:hover:bg-muted/30"
-                }`
-              }
-              onClick={() => setIsOpen(false)}
-            >
-              {label}
-            </NavLink>
+            <li key={path}>
+              <NavLink
+                to={path}
+                className={({ isActive }) =>
+                  `block px-3 py-2 rounded-sm text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-muted dark:hover:bg-muted/30"
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            </li>
           ))}
-        </nav>
-      </div>
+        </ul>
+      </nav>
 
-      {/* User info and logout */}
-      <div className="mt-auto pt-6 border-t border-border">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+      <div className="mt-auto pt-6">
+        <p className="text-sm ml-15 text-gray-500 dark:text-gray-400 mb-2">
           {user?.name}
         </p>
         <button
           onClick={confirmLogout}
-          className="w-full px-3 py-2 text-sm rounded border border-destructive text-destructive hover:bg-destructive hover:text-white transition"
+          className="w-full px-3 py-2 text-sm rounded text-destructive hover:bg-destructive hover:text-white transition"
         >
           Logout
         </button>
