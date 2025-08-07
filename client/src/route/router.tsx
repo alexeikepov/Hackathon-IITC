@@ -1,6 +1,6 @@
 import { RootLayout } from "@/components/RootLayout";
-import { SchedulePage } from "@/components/SchedulePage";
-import { SyllabusPage } from "@/components/SyllabusPage";
+import { SchedulePage } from "@/pages/SchedulePage";
+import { SyllabusPage } from "@/pages/SyllabusPage";
 import { CourseDetailsPage } from "@/pages/CourseDetailsPage";
 import { CoursesPage } from "@/pages/CoursesPage";
 import { CreateCoursePage } from "@/pages/CreateCoursePage";
@@ -14,7 +14,6 @@ import { createBrowserRouter } from "react-router-dom";
 export const Router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegistrationPage /> },
-
   {
     path: "/",
     element: <ProtectRoutes />,

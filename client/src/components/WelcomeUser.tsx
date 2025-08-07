@@ -43,6 +43,7 @@ export function WelcomeUser({ onLogout }: { onLogout: () => void }) {
           )}
         </button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Welcome, {user?.name ?? "Guest"}</DropdownMenuLabel>
         <DropdownMenuSeparator />

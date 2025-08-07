@@ -27,6 +27,7 @@ type Course = {
 
 export function CourseDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     data: course,
@@ -34,62 +35,20 @@ export function CourseDetailsPage() {
     error,
   } = useQuery<Course>({
     queryKey: ["course", id],
-    // queryFn: async () => {
-    //   const res = await fetch(`http://localhost:3001/api/courses/${id}`, {
-    //     credentials: "include",
-    //   });
-    //   if (!res.ok) throw new Error("Failed to fetch course");
-    //   return res.json();
-    // },
     queryFn: async () => {
-      return {
-        _id: "1",
-        title: "Frontend Basics",
-        description: "Learn HTML, CSS, and JavaScript from scratch.",
-        students: [
-          { _id: "s1", name: "Alice Johnson" },
-          { _id: "s2", name: "Bob Smith" },
-          { _id: "s3", name: "Charlie Lee" },
-        ],
-        materials: [
-          { _id: "m1", title: "Intro to HTML" },
-          { _id: "m2", title: "CSS Flexbox Cheatsheet" },
-          { _id: "m3", title: "JavaScript Basics" },
-        ],
-        schedule: [
-          {
-            day: "Monday",
-            startHour: "09:00",
-            endHour: "11:00",
-            location: {
-              name: "Room A101",
-              lat: 32.0853,
-              lng: 34.7818,
-              radiusMeters: 150,
-            },
-          },
-          {
-            day: "Thursday",
-            startHour: "13:00",
-            endHour: "15:00",
-            location: {
-              name: "Room B202",
-              lat: 32.0861,
-              lng: 34.7822,
-              radiusMeters: 120,
-            },
-          },
-        ],
-      };
+      const res = await fetch(`http://localhost:3001/api/courses/${id}`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch course");
+      return res.json();
     },
+
     enabled: !!id,
   });
 
   if (isLoading) return <p className="text-center">Loading course...</p>;
   if (error || !course)
     return <p className="text-center text-red-500">Course not found.</p>;
-
-  const navigate = useNavigate();
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">
