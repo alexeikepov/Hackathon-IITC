@@ -1,6 +1,6 @@
 import { RootLayout } from "@/components/RootLayout";
-import { SchedulePage } from "@/components/SchedulePage";
-import { SyllabusPage } from "@/components/SyllabusPage";
+import { SchedulePage } from "@/pages/SchedulePage";
+import { SyllabusPage } from "@/pages/SyllabusPage";
 import { CourseDetailsPage } from "@/pages/CourseDetailsPage";
 import { CoursesPage } from "@/pages/CoursesPage";
 import { CreateCoursePage } from "@/pages/CreateCoursePage";

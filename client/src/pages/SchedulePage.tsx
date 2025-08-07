@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +13,7 @@ type Slot = {
   className: string;
 };
 
+const STORAGE_KEY = "weekly_schedule_slots";
 const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
 
 function addOneHourRange(lastHour: string) {
@@ -49,7 +50,6 @@ export function SchedulePage() {
     day: string;
     hour: string;
   } | null>(null);
-
   const [hours, setHours] = useState<string[]>([
     "08:00 - 09:00",
     "09:00 - 10:00",
@@ -58,8 +58,25 @@ export function SchedulePage() {
     "12:00 - 13:00",
     "13:00 - 14:00",
   ]);
-
   const [baseDate, setBaseDate] = useState<Date>(new Date());
+
+  // Load from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed: Slot[] = JSON.parse(saved);
+        setSlots(parsed);
+      } catch (err) {
+        console.error("Failed to parse schedule from localStorage", err);
+      }
+    }
+  }, []);
+
+  // Save to localStorage every time slots change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(slots));
+  }, [slots]);
 
   const sunday = getSundayOfWeek(baseDate);
   const datesForDays = weekDays.map((_, i) => {
@@ -71,7 +88,7 @@ export function SchedulePage() {
   const onSubmit = (data: Slot) => {
     setSlots((prev) => [
       ...prev.filter(
-        (slot) => !(slot.day === data.day && slot.hour === data.hour),
+        (slot) => !(slot.day === data.day && slot.hour === data.hour)
       ),
       data,
     ]);
@@ -105,8 +122,8 @@ export function SchedulePage() {
     });
     setSlots((s) =>
       s.map((slot) =>
-        slot.hour === hours[index] ? { ...slot, hour: value } : slot,
-      ),
+        slot.hour === hours[index] ? { ...slot, hour: value } : slot
+      )
     );
   };
 
@@ -127,17 +144,28 @@ export function SchedulePage() {
     if (newDate) setBaseDate(newDate);
   };
 
+  const clearSchedule = () => {
+    setSlots([]);
+    localStorage.removeItem(STORAGE_KEY);
+  };
   return (
     <div className="max-w-6xl mx-auto p-6">
       <Card>
         <CardHeader className="flex items-center justify-between">
           <CardTitle>Weekly Schedule</CardTitle>
-          <input
-            type="date"
-            onChange={onBaseDateChange}
-            className="border rounded px-3 py-1"
-            value={baseDate.toISOString().slice(0, 10)}
-          />
+          <div className="flex items-center gap-4">
+            <input
+              type="date"
+              onChange={onBaseDateChange}
+              className="border rounded px-3 py-1"
+              value={baseDate.toISOString().slice(0, 10)}
+            />
+            {isAuth && (
+              <Button variant="destructive" onClick={clearSchedule}>
+                Clear Schedule
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {isAuth && (
