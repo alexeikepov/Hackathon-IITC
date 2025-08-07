@@ -42,7 +42,6 @@ export function Footer() {
             Support
           </a>
 
-          {/* Theme toggle button */}
           <button
             onClick={toggleTheme}
             className="px-2 py-1 border rounded hover:bg-accent transition flex items-center gap-2"

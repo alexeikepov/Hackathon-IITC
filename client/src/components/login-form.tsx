@@ -78,7 +78,6 @@ export function LoginForm({
       </div>
 
       <div className="grid gap-4">
-        {/* Email */}
         <div className="grid gap-1">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -92,7 +91,6 @@ export function LoginForm({
           )}
         </div>
 
-        {/* Password */}
         <div className="grid gap-1 relative">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
@@ -115,14 +113,12 @@ export function LoginForm({
           )}
         </div>
 
-        {/* Error message */}
         {mutation.error && (
           <p className="text-sm text-red-500 text-center">
             {mutation.error.message}
           </p>
         )}
 
-        {/* Submit */}
         <Button type="submit" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="w-4 h-4 animate-spin" />

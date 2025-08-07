@@ -12,17 +12,19 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (!token) {
-      navigate("/404"); // או להציג שגיאה
+      navigate("/404");
       return;
     }
 
     const checkToken = async () => {
       try {
-        const tokenResponse = await axios.get(`http://localhost:3001/api/auth/showRegister?token=${token}`);
+        const tokenResponse = await axios.get(
+          `http://localhost:3001/api/auth/showRegister?token=${token}`
+        );
         console.log(tokenResponse);
         setValid(true);
       } catch (err) {
-        navigate("/404"); // טוקן לא תקף או פג תוקף
+        navigate("/404");
       } finally {
         setLoading(false);
       }
@@ -32,7 +34,7 @@ export default function RegisterPage() {
   }, [token]);
 
   if (loading) return <p>Checking token...</p>;
-  if (!valid) return null; // כבר הופנה ל־404כבר הופנה ל־
+  if (!valid) return null;
   return (
     <main className="w-full min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#f0f4ff] via-[#e0f7fa] to-[#e3f2fd] dark:from-[#1f2937] dark:via-[#111827] dark:to-[#1f2937]">
       <div className="w-full max-w-md space-y-8 bg-white/80 dark:bg-black/30 backdrop-blur-md rounded-2xl shadow-xl p-8 text-gray-800 dark:text-gray-100">

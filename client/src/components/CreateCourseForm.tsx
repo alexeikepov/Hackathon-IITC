@@ -56,7 +56,6 @@ export function CreateCourseForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {/* TITLE */}
           <div>
             <Label className="text-base">Title</Label>
             <Input
@@ -66,7 +65,6 @@ export function CreateCourseForm() {
             />
           </div>
 
-          {/* DESCRIPTION */}
           <div>
             <Label className="text-base">Description</Label>
             <Textarea
@@ -76,7 +74,6 @@ export function CreateCourseForm() {
             />
           </div>
 
-          {/* SYLLABUS */}
           <div>
             <Label className="text-base">Syllabus Link</Label>
             <Input
@@ -87,7 +84,6 @@ export function CreateCourseForm() {
             />
           </div>
 
-          {/* SCHEDULE */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
               Schedule
@@ -183,7 +179,6 @@ export function CreateCourseForm() {
             </Button>
           </div>
 
-          {/* SUBMIT */}
           <Button type="submit" size="lg" className="w-full text-lg">
             Create Course
           </Button>
