@@ -23,6 +23,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+// Zod schema with validation
 const scheduleItem = z
   .object({
     day: z.string().min(1, "Day is required"),
@@ -43,12 +44,27 @@ const scheduleItem = z
 const schema = z.object({
   title: z.string().min(1, "Title is too short"),
   description: z.string().min(1, "Description is too short"),
-  syllabusLink: z.string().url("Must be a valid URL"),
-  schedule: z.array(scheduleItem).min(1, "At least one schedule is required"),
-});
+  syllabusLink: z.url("Must be a valid URL"),
+  schedule: z
+    .array(
+      z.object({
+        day: z.string().min(1, "Day is required"),
+        startHour: z.string(),
+        endHour: z.string(),
+        location: z.object({
+          name: z.string(),
+          lat: z.string(),
+          lng: z.string(),
+          radiusMeters: z.string(),
+        }),
+      })
+    )
+    .min(1, "At least one schedule is required"),
+
 
 type FormData = z.infer<typeof schema>;
 
+// Sortable wrapper for each schedule block
 function SortableScheduleItem({
   id,
   children,
@@ -87,24 +103,25 @@ export function CreateCoursePage() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      title: "",
-      description: "",
-      syllabusLink: "",
-      schedule: [
-        {
-          day: "Monday",
-          startHour: "09:00",
-          endHour: "11:00",
-          location: {
-            name: "Room 204",
-            lat: "32.0853",
-            lng: "34.7818",
-            radiusMeters: "50",
-          },
-        },
-      ],
+   
+defaultValues: {
+  title: "Intro to Web Development",
+  description: "A full introduction to web development covering frontend and backend basics.",
+  syllabusLink: "https://example.com/syllabus.pdf",
+  schedule: [
+    {
+      day: "Monday",
+      startHour: "09:00",
+      endHour: "11:00",
+      location: {
+        name: "Room 204 - Tech Campus",
+        lat: "32.0853", // Tel Aviv latitude example
+        lng: "34.7818", // Tel Aviv longitude example
+        radiusMeters: "50", // Distance for GPS-based check-ins
+      },
     },
+  ],
+}
   });
 
   const { fields, append, remove, move } = useFieldArray({
@@ -127,10 +144,7 @@ export function CreateCoursePage() {
 
       return res.json();
     },
-    onSuccess: () => {
-      alert("Course created!");
-      navigate("/courses");
-    },
+    onSuccess: () => navigate("/courses"),
   });
 
   const onSubmit = (data: FormData) => {
@@ -140,6 +154,7 @@ export function CreateCoursePage() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
+
     const oldIndex = fields.findIndex((f) => f.id === active.id);
     const newIndex = fields.findIndex((f) => f.id === over.id);
     move(oldIndex, newIndex);
@@ -152,6 +167,7 @@ export function CreateCoursePage() {
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Title */}
         <div>
           <Label>Title</Label>
           <Input {...register("title")} placeholder="Course title" />
@@ -160,6 +176,7 @@ export function CreateCoursePage() {
           )}
         </div>
 
+        {/* Description */}
         <div>
           <Label>Description</Label>
           <Textarea
@@ -171,6 +188,7 @@ export function CreateCoursePage() {
           )}
         </div>
 
+        {/* Syllabus */}
         <div>
           <Label>Syllabus Link</Label>
           <Input {...register("syllabusLink")} placeholder="https://..." />
@@ -181,6 +199,7 @@ export function CreateCoursePage() {
           )}
         </div>
 
+        {/* Schedule */}
         <div>
           <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
             Schedule
@@ -250,7 +269,7 @@ export function CreateCoursePage() {
                           <Input
                             type="number"
                             {...register(
-                              `schedule.${index}.location.radiusMeters`,
+                              `schedule.${index}.location.radiusMeters`
                             )}
                           />
                         </div>
