@@ -3,16 +3,23 @@ import { ICourse } from "../courses/course.types.js";
 import { userValidationSchema } from "./user.schema.js";
 import z from "zod";
 
+export enum UserRole {
+  ADMIN = "admin",
+  STUDENT = "student",
+  TEACHER = "teacher",
+}
+
 export interface IUser {
   email: string;
   password: string;
   name: string;
-  role: { type: string, enum: ["student", "admin", "teacher"], default: "student" };
+  role: { type: string, enum: UserRole, default: UserRole.STUDENT };
   phone: string;
   location?: string,
   militaryUnit?: string,
-  ID:string,
+  ID: string,
   joinedCourses?: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  taughtCourses?: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }]
 
   createdAt: Date;
   updatedAt: Date;

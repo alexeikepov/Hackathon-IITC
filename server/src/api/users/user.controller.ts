@@ -87,8 +87,21 @@ const getAllCourses = async (
     return next(err);
   }
 };
+const getCoursesByUserId = async (req: AuthenticatedRequest, res: Response,
+  next: NextFunction
 
+) => {
+  try {
+    const userId = req.params.id;
+
+    const courses = await userService.getCoursesByUserId(userId)
+    res.status(200).json({ courses });
+  } catch (err) {
+    return next(err);
+  }
+};
 export const userController = {
+  getCoursesByUserId,
   getAllUsers,
   getUserById,
   updateUser,
